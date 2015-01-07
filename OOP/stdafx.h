@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <conio.h>
 #include <windows.h>
+#include <fstream>
 
 #include "Console.h"
 using namespace std;

@@ -64,4 +64,20 @@ void Game::Play()
 	{
 		ships[i].Render();
 	}
+
+	ofstream fout;
+	fout.open("ss.txt");
+	if (fout.is_open())
+	{
+		fout << num + 2 << "\n";
+		int i = 0;
+		fout << card.GetText() << '\t' << card.GetX() << '\t' << card.GetY() << '\n';
+		fout << dice.GetText() << '\t' << dice.GetX() << '\t' << dice.GetY() << '\n';
+		for (; i < num; ++i)
+		{
+			fout << ships[i].GetText() << '\t' << ships[i].GetX() << '\t' << ships[i].GetY() << '\n';
+		}
+
+		fout.close();
+	}
 }
