@@ -52,18 +52,27 @@ BaseObject::~BaseObject()
 void BaseObject::CalWH()
 {
 	width = 0;
+	int widthcount = 0;
 	height = 1;
 	int size = strlen(text);
 	for (int i = 0; i < size; i++)
 	{
 		if ('\n' == text[i])
 		{
+			if (widthcount > width)
+			{
+				width = widthcount;
+				widthcount = 0;
+			}
 			height++;
 		}
 		else
-			width++;
+		{
+			widthcount++;
+		}
+			
 	}
-	width /= height;
+	
 }
 void BaseObject::Input()
 {

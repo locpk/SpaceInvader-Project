@@ -11,7 +11,7 @@ public:
 	BaseObject(const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, short _x = 0, short _y = 0);
 	BaseObject(BaseObject const& _obj);
 	BaseObject& operator=(BaseObject const& _obj);
-	~BaseObject();
+	virtual ~BaseObject();
 
 	//accessors 
 	const char* const GetText() const { return text; }
@@ -31,8 +31,9 @@ public:
 	void SetBackGround(ConsoleColor _color)  { background = _color; }
 	
 	void CalWH();
-	void Input();
-	void Update();
-	void Render();
+
+	virtual void Input();
+	virtual void Update();
+	virtual void Render();
 };
 
