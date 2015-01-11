@@ -22,7 +22,7 @@ public:
 	ConsoleColor GetForeGround() const { return foreground; }
 	ConsoleColor GetBackGround() const { return background; }
 	//mutators 
-	void SetText(const char * const _text){ delete[] text; text = _strdup(_text); CalWH(); }
+	void SetText(const char * const _text){delete[] text; text = _strdup(_text); CalWH(); }
 	void SetX(const short _x)  { x = _x; }
 	void SetY(const short _y)  { y = _y; }
 	void SetWidth(const unsigned short _width)  { width = _width; }
@@ -31,9 +31,12 @@ public:
 	void SetBackGround(ConsoleColor _color)  { background = _color; }
 	
 	void CalWH();
-
+	
 	virtual void Input();
-	virtual void Update();
+	virtual void Update(int _frame);
 	virtual void Render();
+
+	bool BaseObject::Collides(const BaseObject* const _obj, const int _newX, const int _newY);
+	bool BaseObject::OutOfBounds(const int _newX, const int _newY);
 };
 

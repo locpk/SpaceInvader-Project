@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
 
-
 Player::Player()
 {
 	name = NULL;
@@ -56,13 +55,16 @@ void Player::Input()
 		int newX = GetX() + dx;
 		int newY = GetY() + dy;
 
-		if (newX >= 0 && newX <= Console::WindowWidth() - GetWidth())
-			SetX(newX);
-		if (newY > 0 && newY <= Console::WindowHeight() - GetHeight())
-			SetY(newY);
+		if (!OutOfBounds(newX, newY) && !Collides(this, newX, newY))
+		{
+			
+			SetX(GetX() + dx); SetY(GetY() + dy);
+		}
+
+
 	}
 }
-void Player::Update()
+void Player::Update(int _frame)
 {
 
 }
@@ -76,3 +78,4 @@ void Player::Render()
 	cout << "Difficulty: " << diff;
 	BaseObject::Render();
 }
+

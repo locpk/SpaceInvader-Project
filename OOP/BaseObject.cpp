@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BaseObject.h"
-
+#include "Game.h"
 
 
 BaseObject::BaseObject()
@@ -49,36 +49,29 @@ BaseObject::~BaseObject()
 
 
 
+
 void BaseObject::CalWH()
 {
-	width = 0;
-	int widthcount = 0;
+	int i = 0;
 	height = 1;
+	width = 0;
 	int size = strlen(text);
-	for (int i = 0; i < size; i++)
+	for (; i < size; ++i)
 	{
-		if ('\n' == text[i])
-		{
-			if (widthcount > width)
-			{
-				width = widthcount;
-				widthcount = 0;
-			}
-			height++;
-		}
+		if (text[i] == '\n')
+			++height;
 		else
-		{
-			widthcount++;
-		}
-			
+			++width;
 	}
-	
+
+	width /= height;
+
 }
 void BaseObject::Input()
 {
 
 }
-void BaseObject::Update()
+void BaseObject::Update(int _frame)
 {
 
 }
@@ -95,4 +88,46 @@ void BaseObject::Render()
 		else
 			cout << text[i];
 	}
+}
+
+bool BaseObject::Collides(const BaseObject* const _obj, const int _newX, const int _newY)
+{
+	int i = 0;
+	BaseObject** tempObjects = Game::GetObjects();
+	bool collided = false;
+
+	for (; i < 2; ++i)
+	{
+		if (tempObjects[i] != _obj)
+		{
+			int left = tempObjects[i]->GetX();
+			int top = tempObjects[i]->GetY();
+			int right = left + tempObjects[i]->GetWidth();
+			int bottom = top + tempObjects[i]->GetHeight();
+
+			if (_newX >= right ||
+				_newX + GetWidth() <= left ||
+				_newY >= bottom ||
+				_newY + GetHeight() <= top)
+			{
+				collided = false;
+			}
+			else
+			{
+				collided = true;
+				break;
+			}
+		}
+
+
+	}
+	return collided;
+}
+
+bool BaseObject::OutOfBounds(const int _newX, const int _newY)
+{
+	if (_newX >= 0 && _newX <= Console::WindowWidth() - GetWidth() && _newY > 0 && _newY <= Console::WindowHeight() - GetHeight())
+		return false;
+	else
+		return true;
 }

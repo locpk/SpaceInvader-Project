@@ -2,13 +2,21 @@
 #include "Game.h"
 #include "BaseObject.h"
 #include "Player.h"
+#include "Enemy.h"
+
+
+
+BaseObject* Game::gameObjects[NUMOFGO];
+
 Game::Game()
 {
 	System::Console::SetBufferSize(80, 25);
 	System::Console::SetWindowSize(80, 25);
 	System::Console::EOLWrap(false);
-	objects = nullptr;
-	objects = new Player("pig", 0, 0, "lol\nlol\nlol", White, Black, Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
+	readinObjects = nullptr;
+	gameObjects[0] = nullptr;
+	gameObjects[1] = nullptr;
+	//readinObjects = new Player("pig", 0, 0, "lol\nlol\nlol", White, Black, Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
 }
 
 
@@ -19,8 +27,16 @@ Game::~Game()
 	delete[] ships;
 #endif
 #pragma endregion
-	delete objects;
-
+#pragma region Lab2
+#if 1
+	int i = 0;
+	for (; i < NUMOFGO; i++)
+	{
+		delete gameObjects[i];
+	}
+	delete[] readinObjects;
+#endif
+#pragma endregion
 }
 
 void Game::Play()
@@ -84,11 +100,11 @@ void Game::Play()
 	{
 		fout << num + 2 << "\n";
 		int i = 0;
-		fout << card.GetText() << '\t' << card.GetX() << '\t' << card.GetY() << '\n';
-		fout << dice.GetText() << '\t' << dice.GetX() << '\t' << dice.GetY() << '\n';
+		fout << card.GetText() << '\t' << card.GetForeGround() << '\t' << card.GetBackGround() << '\n';
+		fout << dice.GetText() << '\t' << dice.GetForeGround() << '\t' << dice.GetBackGround() << '\n';
 		for (; i < num; ++i)
 		{
-			fout << ships[i].GetText() << '\t' << ships[i].GetX() << '\t' << ships[i].GetY() << '\n';
+			fout << ships[i].GetText() << '\t' << ships[i].GetForeGround() << '\t' << ships[i].GetBackGround() << '\n';
 		}
 
 		fout.close();
@@ -96,38 +112,122 @@ void Game::Play()
 #endif
 #pragma endregion
 
-
-	/*for (; play;frame++)
-	{
-		Input();
-		Update();
-		Render();
-		Sleep(10);
-	}*/
+#pragma region Lab2
+#if 1
 
 	ifstream fin;
-	int num = 0;
-	int x, y,i;
-	x = y = i = 0;
+	int fg, bg, i;
+	fg = bg = i = 0;
 	char buffer[50];
 	fin.open("lab1.txt");
 	if (fin.is_open())
 	{
-		fin >> num;
+		fin >> numofRI;
+
+		readinObjects = new BaseObject[numofRI];
+		int i = 0;
 		fin.ignore(LLONG_MAX, '\n');
 
-		while (!fin.eof())
+		while (!fin.eof() && i < numofRI)
 		{
-			fin.get(buffer,sizeof buffer, '\t');
+
+			fin.get(buffer, sizeof buffer, '\t');
+			readinObjects[i].SetText(buffer);
 			//fin.ignore(LLONG_MAX, '\t');
-			fin >> x;
+			fin >> fg;
+			readinObjects[i].SetForeGround((ConsoleColor)fg);
 			fin.ignore(LLONG_MAX, '\t');
-			fin >> y;
+			fin >> bg;
+			readinObjects[i].SetBackGround((ConsoleColor)bg);
 			fin.ignore(LLONG_MAX, '\n');
-			cout << buffer << "\t" << x << "\t" << y << endl;
+			i++;
 		}
+		i = 0;
 		fin.close();
 	}
+
+	for (; i < numofRI; i++)
+	{
+		cout << i + 1 << ": " << endl;
+		Console::ForegroundColor(Cyan);
+		cout << readinObjects[i].GetText() << endl;
+		Console::ResetColor();
+	}
+	int choice = 0;
+	cout << "Which one would you like your enemy to be?" << endl;
+	for (;;)
+	{
+
+		if (cin >> choice && choice > 0 && choice <= numofRI)
+		{
+			break;
+		}
+		cout << "Try again!" << endl;
+		cin.clear();
+		cin.ignore(LLONG_MAX, '\n');
+	}
+	gameObjects[1] = new Enemy(2,
+		readinObjects[choice - 1].GetText(), readinObjects[choice - 1].GetForeGround(), readinObjects[choice - 1].GetBackGround(),
+		Console::WindowWidth() >> 1, 2);
+	choice = 0;
+	cout << "Which one would you like to be?" << endl;
+	for (;;)
+	{
+
+		if (cin >> choice && choice > 0 && choice <= numofRI)
+		{
+			break;
+		}
+		cout << "Try again!" << endl;
+		cin.clear();
+		cin.ignore(LLONG_MAX, '\n');
+	}
+	cout << "What should I call you?" << endl;
+	char name[32];
+	for (;;)
+	{
+
+		if (cin >> name)
+		{
+			break;
+		}
+		cout << "Try again!" << endl;
+		cin.clear();
+		cin.sync();
+	}
+
+	gameObjects[0] = new Player(name, 0, 0
+		, readinObjects[choice - 1].GetText(), readinObjects[choice - 1].GetForeGround(), readinObjects[choice - 1].GetBackGround(),
+		Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
+
+	//save player's choices to file
+	ofstream fout;
+	fout.open("lab2.txt");
+	if (fout.is_open())
+	{
+		fout << NUMOFGO << "\n";
+		int i = 0;
+		for (; i < NUMOFGO; ++i)
+		{
+			fout << gameObjects[i]->GetText() << '\t' << gameObjects[i]->GetForeGround() << '\t' << gameObjects[i]->GetBackGround() 
+				<< '\t' << gameObjects[i]->GetX() << '\t' << gameObjects[i]->GetY()
+				<< '\n';
+		}
+
+		fout.close();
+	}
+#endif
+#pragma endregion
+
+	for (; play; frame++)
+	{
+		Input();
+		Update(frame);
+		Render();
+		Sleep(10);
+	}
+
+
 
 
 
@@ -137,17 +237,30 @@ void Game::Input()
 {
 	if (GetAsyncKeyState(VK_ESCAPE))
 		play = false;
-	objects->Input();
-}
-void Game::Update()
-{
+	int i = 0;
+	for (; i < 2; i++)
+	{
+		gameObjects[i]->Input();
+	}
 
+}
+void Game::Update(int _frame)
+{
+	int i = 0;
+	for (; i < 2; i++)
+	{
+		gameObjects[i]->Update(_frame);
+	}
 }
 void Game::Render()
 {
 	System::Console::Lock(true);
 	System::Console::Clear();
-	objects->Render();
+	int i = 0;
+	for (; i < 2; i++)
+	{
+		gameObjects[i]->Render();
+	}
 
 	System::Console::Lock(false);
 }

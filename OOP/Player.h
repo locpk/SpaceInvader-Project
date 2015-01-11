@@ -25,7 +25,8 @@ public:
 	void SetDiff(const int _diff)	{ diff = _diff; }
 
 	void Input();
-	void Update();
+	void Update(int _frame);
 	void Render();
+	
 };
 
