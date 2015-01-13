@@ -5,7 +5,7 @@ private:
 
 public:
 	BaseState();
-	~BaseState();
+	virtual ~BaseState();
 
 	virtual void Input() = 0;
 	virtual void Update(int _frame) = 0;

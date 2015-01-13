@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BaseObject.h"
 #include "Game.h"
-
+#include "GameState.h"
 
 BaseObject::BaseObject()
 {
@@ -93,10 +93,10 @@ void BaseObject::Render()
 bool BaseObject::Collides(const BaseObject* const _obj, const int _newX, const int _newY)
 {
 	int i = 0;
-	BaseObject** tempObjects = Game::GetObjects();
+	BaseObject** tempObjects = GameState::GetObjects();
 	bool collided = false;
 
-	for (; i < 2; ++i)
+	for (; i < NUMOFGO; ++i)
 	{
 		if (tempObjects[i] != _obj)
 		{

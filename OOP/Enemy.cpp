@@ -30,7 +30,7 @@ void Enemy::Update(int _frame)
 	if (_frame % 10 == 0)
 	{
 		int newX = GetX() + velocity;
-		int newY = GetY() + 1;
+		int newY = GetY();
 
 		if (Collides(this,newX, newY) || OutOfBounds(newX,newY))
 		{

@@ -8,7 +8,7 @@ private:
 	short x, y;
 public:
 	BaseObject();
-	BaseObject(const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, short _x = 0, short _y = 0);
+	BaseObject(const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, const short _x = 0, const short _y = 0);
 	BaseObject(BaseObject const& _obj);
 	BaseObject& operator=(BaseObject const& _obj);
 	virtual ~BaseObject();
@@ -21,14 +21,16 @@ public:
 	unsigned short GetHeight() const { return height; }
 	ConsoleColor GetForeGround() const { return foreground; }
 	ConsoleColor GetBackGround() const { return background; }
+	
+	
 	//mutators 
 	void SetText(const char * const _text){delete[] text; text = _strdup(_text); CalWH(); }
 	void SetX(const short _x)  { x = _x; }
 	void SetY(const short _y)  { y = _y; }
 	void SetWidth(const unsigned short _width)  { width = _width; }
 	void SetHeight(const unsigned short _height)  { height = _height; }
-	void SetForeGround(ConsoleColor _color)  { foreground = _color; }
-	void SetBackGround(ConsoleColor _color)  { background = _color; }
+	void SetForeGround(const ConsoleColor _color)  { foreground = _color; }
+	void SetBackGround(const ConsoleColor _color)  { background = _color; }
 	
 	void CalWH();
 	

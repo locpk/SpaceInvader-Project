@@ -1,8 +1,16 @@
 #pragma once
 #include "BaseState.h"
+
+
+class BaseObject;
+
 class GameState :
 	public BaseState
 {
+private:
+	int numofRI = 0; //number of read in objects
+	BaseObject* readinObjects;
+	static BaseObject* gameObjects[NUMOFGO];
 public:
 	GameState();
 	~GameState();
@@ -13,5 +21,7 @@ public:
 
 	void Enter();
 	void Exit();
+
+	static BaseObject** GetObjects() { return gameObjects; }
 };
 

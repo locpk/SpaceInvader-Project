@@ -3,32 +3,50 @@
 #include "BaseObject.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "BaseState.h"
+#include "GameState.h"
+#include "MenuState.h"
 
-
-
+#pragma region Lab2
+#if LAB2
 BaseObject* Game::gameObjects[NUMOFGO];
+#endif
+#pragma endregion
+
+
+BaseState* Game::currentState = NULL;
+BaseState* Game::states[2] { NULL, NULL};
 
 Game::Game()
 {
-	System::Console::SetBufferSize(80, 25);
-	System::Console::SetWindowSize(80, 25);
+	System::Console::SetBufferSize(100, 50);
+	System::Console::SetWindowSize(100, 50);
 	System::Console::EOLWrap(false);
+
+#pragma region Lab2
+#if LAB2
 	readinObjects = nullptr;
 	gameObjects[0] = nullptr;
 	gameObjects[1] = nullptr;
-	//readinObjects = new Player("pig", 0, 0, "lol\nlol\nlol", White, Black, Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
+#endif
+#pragma endregion
+
+	//Set up the states
+	states[0] = new MenuState();
+	states[1] = new GameState();
 }
 
 
 Game::~Game()
 {
+
 #pragma region Lab1
-#if 0
+#if LAB1
 	delete[] ships;
 #endif
 #pragma endregion
 #pragma region Lab2
-#if 1
+#if LAB2
 	int i = 0;
 	for (; i < NUMOFGO; i++)
 	{
@@ -37,12 +55,17 @@ Game::~Game()
 	delete[] readinObjects;
 #endif
 #pragma endregion
+
+	delete states[0];
+	delete states[1];
+	
+	
 }
 
 void Game::Play()
 {
 #pragma region Lab1 
-#if 0
+#if LAB1
 	BaseObject card("+---+\n|A  |\n| \x3 |\n|  A|\n+---+",White,Black, 12, 15), // Try \x3 instead of H
 		dice("* *\n * \n* *", White, Black, 0, 15);
 	cout << "Before:\n";
@@ -109,11 +132,13 @@ void Game::Play()
 
 		fout.close();
 	}
+	
+	system("pause");
+	Console::Clear();
 #endif
 #pragma endregion
-
 #pragma region Lab2
-#if 1
+#if LAB2
 
 	ifstream fin;
 	int fg, bg, i;
@@ -209,25 +234,29 @@ void Game::Play()
 		int i = 0;
 		for (; i < NUMOFGO; ++i)
 		{
-			fout << gameObjects[i]->GetText() << '\t' << gameObjects[i]->GetForeGround() << '\t' << gameObjects[i]->GetBackGround() 
+			fout << gameObjects[i]->GetText() << '\t' << gameObjects[i]->GetForeGround() << '\t' << gameObjects[i]->GetBackGround()
 				<< '\t' << gameObjects[i]->GetX() << '\t' << gameObjects[i]->GetY()
 				<< '\n';
 		}
 
 		fout.close();
 	}
+
+
+	
 #endif
 #pragma endregion
 
-	for (; play; frame++)
+
+	ChangeState(MENU_STATE);
+
+	for (; play; ++frame)
 	{
 		Input();
 		Update(frame);
 		Render();
-		Sleep(10);
+		Sleep(30);
 	}
-
-
 
 
 
@@ -237,30 +266,55 @@ void Game::Input()
 {
 	if (GetAsyncKeyState(VK_ESCAPE))
 		play = false;
+#pragma region Lab2
+#if LAB2
 	int i = 0;
 	for (; i < 2; i++)
 	{
 		gameObjects[i]->Input();
 	}
+#endif
+#pragma endregion
+	currentState->Input();
 
 }
 void Game::Update(int _frame)
 {
+#pragma region Lab2
+#if LAB2
 	int i = 0;
 	for (; i < 2; i++)
 	{
 		gameObjects[i]->Update(_frame);
 	}
+#endif
+#pragma endregion 
+	currentState->Update(_frame);
 }
 void Game::Render()
 {
 	System::Console::Lock(true);
 	System::Console::Clear();
+#pragma region Lab2
+#if LAB2
 	int i = 0;
 	for (; i < 2; i++)
 	{
 		gameObjects[i]->Render();
 	}
+#endif
+#pragma endregion
+	currentState->Render();
 
 	System::Console::Lock(false);
+}
+
+
+void Game::ChangeState(STATE_TYPES _state)
+{
+	if (currentState)
+		currentState->Exit();
+
+	currentState = states[_state];
+	currentState->Enter();
 }

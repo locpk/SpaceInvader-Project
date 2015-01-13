@@ -19,7 +19,10 @@
 #include <conio.h>
 #include <windows.h>
 #include <fstream>
+#include <string>
 
 #include "Console.h"
 using namespace std;
 using namespace System;
+
+#define NUMOFGO 2 // number of game objects

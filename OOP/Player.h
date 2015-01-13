@@ -9,7 +9,7 @@ private:
 public:
 	Player();
 	Player(const char* const _name, int _score, int _diff, 
-		const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, short _x = 0, short _y = 0);
+		const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, const short _x = 0, const short _y = 0);
 	Player(const Player& _obj);
 	Player& operator=(const Player& _obj);
 	~Player();
