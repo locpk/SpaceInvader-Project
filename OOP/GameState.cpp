@@ -3,52 +3,65 @@
 #include "BaseObject.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Missile.h"
 
-BaseObject* GameState::gameObjects[NUMOFGO];
+vector<BaseObject*> GameState::gameObjects;
 
 
 GameState::GameState()
 {
-	readinObjects = nullptr;
-	gameObjects[0] = nullptr;
-	gameObjects[1] = nullptr;
+	gameObjects.push_back(new Player("ss",0,0,"  __\n| \"\"\"\\-=\n(____)",Cyan,Black,Console::WindowWidth() >> 1,Console::WindowHeight()>>1));
 
-
-	
-	
 }
 
 
 GameState::~GameState()
 {
 	int i = 0;
-	for (; i < NUMOFGO; i++)
+	for (; i < (int)gameObjects.size(); i++)
 	{
 		delete gameObjects[i];
 	}
-	delete[] readinObjects;
+
 }
 
 void GameState::Input()
 {
 	int i = 0;
-	for (; i < 2; i++)
+	for (; i < (int)gameObjects.size(); i++)
 	{
 		gameObjects[i]->Input();
+	}
+	if (GetAsyncKeyState(VK_ESCAPE))
+	{
+		Exit();
 	}
 }
 void GameState::Update(int _frame)
 {
 	int i = 0;
-	for (; i < 2; i++)
+	for (; i < (int)gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update(_frame);
+	}
+
+	vector<BaseObject*>::iterator iter;
+	iter = gameObjects.begin();
+	while (iter != gameObjects.end())
+	{
+		if (!(*iter)->GetAlive())
+		{
+			delete *iter;
+			gameObjects.erase(iter--);
+		}
+
+		++iter;
 	}
 }
 void GameState::Render()
 {
 	int i = 0;
-	for (; i < 2; i++)
+	for (; i <(int)gameObjects.size(); i++)
 	{
 		gameObjects[i]->Render();
 	}
@@ -57,110 +70,58 @@ void GameState::Render()
 void GameState::Enter()
 {
 	Console::Clear();
+	Player* p = dynamic_cast<Player*>(gameObjects[0]);
+	Console::FlushKeys();
 
-	ifstream fin;
-	int fg, bg, i;
-	fg = bg = i = 0;
-	char buffer[50];
-	fin.open("lab1.txt");
-	if (fin.is_open())
+	string name;
+	cout << "What's your name? : _\b";
+	cin >> name;
+	p->SetName(name.c_str());
+
+	if (GetInfo().diff == 0)
+		GetInfo().diff = 1;
+
+	if (GetInfo().enemyNum == 0)
+		GetInfo().enemyNum = 1;
+
+	p->SetDiff(GetInfo().diff);
+
+
+	int i = 0;
+	for (; i < GetInfo().enemyNum; ++i)
 	{
-		fin >> numofRI;
+		Enemy* e = new Enemy();
+		e->SetX(2 * i + 1);
+		e->SetY(2 * i +1);
 
-		readinObjects = new BaseObject[numofRI];
-		int i = 0;
-		fin.ignore(LLONG_MAX, '\n');
-
-		while (!fin.eof() && i < numofRI)
-		{
-
-			fin.get(buffer, sizeof buffer, '\t');
-			readinObjects[i].SetText(buffer);
-			//fin.ignore(LLONG_MAX, '\t');
-			fin >> fg;
-			readinObjects[i].SetForeGround((ConsoleColor)fg);
-			fin.ignore(LLONG_MAX, '\t');
-			fin >> bg;
-			readinObjects[i].SetBackGround((ConsoleColor)bg);
-			fin.ignore(LLONG_MAX, '\n');
-			i++;
-		}
-		i = 0;
-		fin.close();
-	}
-
-	for (; i < numofRI; i++)
-	{
-		cout << i + 1 << ": " << endl;
-		Console::ForegroundColor(Cyan);
-		cout << readinObjects[i].GetText() << endl;
-		Console::ResetColor();
-	}
-	int choice = 0;
-	cout << "Which one would you like your enemy to be?" << endl;
-	for (;;)
-	{
-
-		if (cin >> choice && choice > 0 && choice <= numofRI)
-		{
-			break;
-		}
-		cout << "Try again!" << endl;
-		cin.clear();
-		cin.ignore(LLONG_MAX, '\n');
-	}
-	gameObjects[1] = new Enemy(2,
-		readinObjects[choice - 1].GetText(), readinObjects[choice - 1].GetForeGround(), readinObjects[choice - 1].GetBackGround(),
-		Console::WindowWidth() >> 1, 2);
-	choice = 0;
-	cout << "Which one would you like to be?" << endl;
-	for (;;)
-	{
-
-		if (cin >> choice && choice > 0 && choice <= numofRI)
-		{
-			break;
-		}
-		cout << "Try again!" << endl;
-		cin.clear();
-		cin.ignore(LLONG_MAX, '\n');
-	}
-	cout << "What should I call you?" << endl;
-	char name[32];
-	for (;;)
-	{
-
-		if (cin >> name)
-		{
-			break;
-		}
-		cout << "Try again!" << endl;
-		cin.clear();
-		cin.sync();
-	}
-
-	gameObjects[0] = new Player(name, 0, 0
-		, readinObjects[choice - 1].GetText(), readinObjects[choice - 1].GetForeGround(), readinObjects[choice - 1].GetBackGround(),
-		Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
-
-	//save player's choices to file
-	ofstream fout;
-	fout.open("lab3.txt");
-	if (fout.is_open())
-	{
-		fout << NUMOFGO << "\n";
-		int i = 0;
-		for (; i < NUMOFGO; ++i)
-		{
-			fout << gameObjects[i]->GetText() << '\t' << gameObjects[i]->GetForeGround() << '\t' << gameObjects[i]->GetBackGround()
-				<< '\t' << gameObjects[i]->GetX() << '\t' << gameObjects[i]->GetY()
-				<< '\n';
-		}
-
-		fout.close();
+		gameObjects.push_back(e);
 	}
 }
 void GameState::Exit()
 {
+	//Game is over, save out my score
+	System::Console::Clear();
 
+	System::Console::SetCursorPosition(10, 10);
+	Player* p = dynamic_cast<Player*>(gameObjects[0]);
+	cout << "Well done " << p->GetName() << ", you earned " << p->GetScore() << " points on a diff of " << p->GetDiff() << "\n\n\n\n";
+
+	fstream bout;
+	bout.open("scores.bin", ios_base::binary | ios_base::app | ios_base::out);
+
+	PlayerInfo info;
+	info.score = p->GetScore();
+	info.diff = p->GetDiff();
+	strcpy_s(info.buffer, 32, p->GetName());
+
+	vector<PlayerInfo> scores;
+	scores.push_back(info);
+
+	if (bout.is_open())
+	{
+		
+		bout.write((char*)scores.data(), sizeof(PlayerInfo)* scores.size());
+
+		bout.close();
+	}
 }

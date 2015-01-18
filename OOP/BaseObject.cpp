@@ -2,10 +2,10 @@
 #include "BaseObject.h"
 #include "Game.h"
 #include "GameState.h"
+#include "Enemy.h"
 
 BaseObject::BaseObject()
 {
-	text = NULL;
 	x = y = -1;
 	width = height = -1;
 	foreground = White;
@@ -13,7 +13,6 @@ BaseObject::BaseObject()
 }
 BaseObject::BaseObject(const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, short _x, short _y)
 {
-	text = NULL;
 	SetX(_x);
 	SetY(_y);
 	SetText(_text);
@@ -22,10 +21,9 @@ BaseObject::BaseObject(const char* const _text, const ConsoleColor _fg, const Co
 }
 BaseObject::BaseObject(BaseObject const& _obj)
 {
-	text = NULL;
 	SetX(_obj.x);
 	SetY(_obj.y);
-	SetText(_obj.text);
+	SetText(_obj.text.c_str());
 	SetForeGround(_obj.foreground);
 	SetBackGround(_obj.background);
 }
@@ -35,7 +33,7 @@ BaseObject& BaseObject::operator=(BaseObject const& _obj)
 	{
 		SetX(_obj.x);
 		SetY(_obj.y);
-		SetText(_obj.text);
+		SetText(_obj.text.c_str());
 		SetForeGround(_obj.foreground);
 		SetBackGround(_obj.background);
 	}
@@ -43,7 +41,6 @@ BaseObject& BaseObject::operator=(BaseObject const& _obj)
 }
 BaseObject::~BaseObject()
 {
-	delete[] text;
 }
 
 
@@ -55,7 +52,7 @@ void BaseObject::CalWH()
 	int i = 0;
 	height = 1;
 	width = 0;
-	int size = strlen(text);
+	int size = text.length();
 	for (; i < size; ++i)
 	{
 		if (text[i] == '\n')
@@ -78,7 +75,9 @@ void BaseObject::Update(int _frame)
 void BaseObject::Render()
 {
 	Console::SetCursorPosition(x, y);
-	int size = strlen(text);
+	Console::ForegroundColor(foreground);
+	Console::BackgroundColor(background);
+	int size = text.length();
 	for (int i = 0; i < size; i++)
 	{
 		if ('\n' == text[i])
@@ -88,37 +87,36 @@ void BaseObject::Render()
 		else
 			cout << text[i];
 	}
+	Console::ResetColor();
 }
 
-bool BaseObject::Collides(const BaseObject* const _obj, const int _newX, const int _newY)
+bool BaseObject::Collides(const int _newX, const int _newY)
 {
 	int i = 0;
-	BaseObject** tempObjects = GameState::GetObjects();
+	vector<BaseObject*> tempObjects = (*GameState::GetObjects());
 	bool collided = false;
 
-	for (; i < NUMOFGO; ++i)
+	for (; i < (int)tempObjects.size(); ++i)
 	{
-		if (tempObjects[i] != _obj)
+
+		int left = tempObjects[i]->GetX();
+		int top = tempObjects[i]->GetY();
+		int right = left + tempObjects[i]->GetWidth();
+		int bottom = top + tempObjects[i]->GetHeight();
+
+		if (_newX >= right ||
+			_newX + GetWidth() <= left ||
+			_newY >= bottom ||
+			_newY + GetHeight() <= top)
 		{
-			int left = tempObjects[i]->GetX();
-			int top = tempObjects[i]->GetY();
-			int right = left + tempObjects[i]->GetWidth();
-			int bottom = top + tempObjects[i]->GetHeight();
-
-			if (_newX >= right ||
-				_newX + GetWidth() <= left ||
-				_newY >= bottom ||
-				_newY + GetHeight() <= top)
-			{
-				collided = false;
-			}
-			else
-			{
-				collided = true;
-				break;
-			}
+			collided = false;
 		}
+		else
+		{
 
+			collided = true;
+			break;
+		}
 
 	}
 	return collided;
@@ -126,7 +124,7 @@ bool BaseObject::Collides(const BaseObject* const _obj, const int _newX, const i
 
 bool BaseObject::OutOfBounds(const int _newX, const int _newY)
 {
-	if (_newX >= 0 && _newX <= Console::WindowWidth() - GetWidth() && _newY > 0 && _newY <= Console::WindowHeight() - GetHeight())
+	if (_newX >= 0 && _newX <= Console::WindowWidth() - GetWidth() && _newY > 0 && _newY <= Console::WindowHeight() - 1 - GetHeight())
 		return false;
 	else
 		return true;

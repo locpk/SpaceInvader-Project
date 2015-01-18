@@ -4,6 +4,7 @@ class Enemy :
 	public BaseObject
 {
 private:
+	int hp = 100;
 	int velocity = 1;
 public:
 	Enemy();
@@ -13,13 +14,14 @@ public:
 
 	//accessors 
 	int GetVelocity() const { return velocity; }
-
+	int GetHP() const { return hp; }
 	//mutators
 	void SetVelocity(const int _velocity) { velocity = _velocity; }
-
+	void SetHP(const int _hp) { hp = _hp; }
 
 	void Input();
 	void Update(int _frame);
 	void Render();
+	bool Collides(const int _newX, const int _newY);
 };
 

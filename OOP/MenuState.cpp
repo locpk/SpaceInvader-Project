@@ -33,9 +33,25 @@ MenuState::~MenuState()
 
 void MenuState::Input()
 {
-	if (GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_RETURN) && !buttonPressed)
 	{
-		Game::ChangeState(GAME_STATE);
+		switch (menuNum)
+		{
+		case 0:
+		{
+			Game::ChangeState(GAME_STATE);
+			break;
+		}
+		case 1:
+		{
+			Game::ChangeState(OPTION_STATE);
+			break;
+		}
+		default:
+			break;
+		}
+
+		buttonPressed = true;
 	}
 
 	if ((GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP)) && !buttonPressed)
@@ -83,6 +99,9 @@ void MenuState::Render()
 
 void MenuState::Enter()
 {
+	System::Console::FlushKeys();
+	Sleep(15);
+	buttonPressed = true;
 }
 
 void MenuState::Exit()

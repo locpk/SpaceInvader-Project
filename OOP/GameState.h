@@ -8,9 +8,7 @@ class GameState :
 	public BaseState
 {
 private:
-	int numofRI = 0; //number of read in objects
-	BaseObject* readinObjects;
-	static BaseObject* gameObjects[NUMOFGO];
+	static vector<BaseObject*> gameObjects;
 public:
 	GameState();
 	~GameState();
@@ -22,6 +20,6 @@ public:
 	void Enter();
 	void Exit();
 
-	static BaseObject** GetObjects() { return gameObjects; }
+	static vector<BaseObject*>* GetObjects() { return &gameObjects; }
 };
 

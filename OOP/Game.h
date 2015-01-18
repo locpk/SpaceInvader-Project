@@ -12,7 +12,7 @@
 class BaseObject;
 class BaseState;
 
-enum STATE_TYPES { MENU_STATE = 0, GAME_STATE };
+enum STATE_TYPES { MENU_STATE = 0, GAME_STATE, OPTION_STATE, EXIT_STATE };
 
 class Game
 {
@@ -33,10 +33,11 @@ private:
 #endif
 #pragma endregion
 	static BaseState* currentState;
-	static BaseState* states[2];
+	static vector<BaseState*> states;
 public:
 	Game();
 	~Game();
+
 
 	void Play();
 	void Input();

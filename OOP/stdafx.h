@@ -20,6 +20,7 @@
 #include <windows.h>
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "Console.h"
 using namespace std;

@@ -15,12 +15,12 @@ BaseObject* Game::gameObjects[NUMOFGO];
 
 
 BaseState* Game::currentState = NULL;
-BaseState* Game::states[2] { NULL, NULL};
+vector<BaseState*> Game::states;
 
 Game::Game()
 {
-	System::Console::SetBufferSize(100, 50);
-	System::Console::SetWindowSize(100, 50);
+	System::Console::SetBufferSize(200, 50);
+	System::Console::SetWindowSize(200, 50);
 	System::Console::EOLWrap(false);
 
 #pragma region Lab2
@@ -32,8 +32,8 @@ Game::Game()
 #pragma endregion
 
 	//Set up the states
-	states[0] = new MenuState();
-	states[1] = new GameState();
+	states.push_back(new MenuState());
+	states.push_back(new GameState());
 }
 
 
@@ -55,10 +55,11 @@ Game::~Game()
 	delete[] readinObjects;
 #endif
 #pragma endregion
-
-	delete states[0];
-	delete states[1];
-	
+	int i = 0;
+	for (; i < (int)states.size(); i++)
+	{
+		delete states[i];
+	}
 	
 }
 
@@ -264,6 +265,9 @@ void Game::Play()
 
 void Game::Input()
 {
+
+	currentState->Input();
+
 	if (GetAsyncKeyState(VK_ESCAPE))
 		play = false;
 #pragma region Lab2
@@ -275,7 +279,7 @@ void Game::Input()
 	}
 #endif
 #pragma endregion
-	currentState->Input();
+	
 
 }
 void Game::Update(int _frame)
