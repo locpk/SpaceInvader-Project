@@ -6,6 +6,8 @@
 #include "BaseState.h"
 #include "GameState.h"
 #include "MenuState.h"
+#include "OptionState.h"
+#include "ExitState.h"
 
 #pragma region Lab2
 #if LAB2
@@ -16,7 +18,7 @@ BaseObject* Game::gameObjects[NUMOFGO];
 
 BaseState* Game::currentState = NULL;
 vector<BaseState*> Game::states;
-
+bool Game::play = true;
 Game::Game()
 {
 	System::Console::SetBufferSize(200, 50);
@@ -34,6 +36,8 @@ Game::Game()
 	//Set up the states
 	states.push_back(new MenuState());
 	states.push_back(new GameState());
+	states.push_back(new OptionState());
+	states.push_back(new ExitState());
 }
 
 

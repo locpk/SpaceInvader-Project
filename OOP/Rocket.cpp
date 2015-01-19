@@ -21,7 +21,7 @@ void Rocket::Update(int _frame)
 		int newX = GetX() + GetXVel();
 		int newY = GetY() + GetYVel();
 
-		if (_frame % 40 == 0)
+		if (_frame % 35 == 0)
 		{
 			vector<BaseObject*> tempObjects = (*GameState::GetObjects());
 			Player* p = dynamic_cast<Player*>(tempObjects[0]);
@@ -31,7 +31,7 @@ void Rocket::Update(int _frame)
 				{
 					Enemy* e = dynamic_cast<Enemy*>(tempObjects[i]);
 					e->SetHP(0);
-					p->SetScore(p->GetScore() + 5);
+					p->SetScore(p->GetScore() + 100);
 				}
 			}
 			

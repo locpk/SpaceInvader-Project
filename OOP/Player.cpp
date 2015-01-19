@@ -112,11 +112,20 @@ void Player::Update(int _frame)
 	{
 		buttonPressed = false;
 	}
+
+	if (GetHP() <= 20)
+	{
+		SetForeGround(DarkRed);
+	}
+	if (GetHP() <= 0)
+	{
+		SetAlive(false);
+	}
 }
 void Player::Render()
 {
 	Console::SetCursorPosition(0, 0);
-	cout << "Name: " << name;
+	cout << "Name: " << name << " HP: " << hp;
 	Console::SetCursorPosition(Console::WindowWidth() >> 1, 0);
 	cout << "Score: " << score;
 	Console::SetCursorPosition(Console::WindowWidth() - 15, 0);
@@ -133,8 +142,8 @@ void Player::Render()
 	{
 		cout << " ^ ";
 	}
-	
-	BaseObject::Render();
+	if (GetAlive())
+		BaseObject::Render();
 }
 
 bool Player::Collides(const int _newX, const int _newY)

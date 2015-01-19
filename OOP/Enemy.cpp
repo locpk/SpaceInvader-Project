@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include"GameState.h"
+#include "Missile.h"
 
 Enemy::Enemy()
 {
@@ -44,10 +45,25 @@ void Enemy::Update(int _frame)
 		{
 			SetX(GetX() + velocity);
 		}
+
+		//enemy hp indication 
 		if (GetHP() <= 20)
 			SetForeGround(Red);
 		if (GetHP() <= 0)
 			SetAlive(false);
+	}
+
+	//enemy shooting every 10 frames
+	if (_frame % 10 == 0)
+	{
+		vector<BaseObject*>* tempObjects = GameState::GetObjects();
+		Missile* m = new Missile();
+		m->SetID(ENEMY_MISSILE);
+		m->SetVel(0, 1);
+		m->SetAlive(true);
+		m->SetX(GetX() + (GetWidth() >> 1));
+		m->SetY(GetY());
+		(*tempObjects).push_back(m);
 	}
 }
 

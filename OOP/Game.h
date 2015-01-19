@@ -18,7 +18,7 @@ class Game
 {
 private:
 	int frame = 0;
-	bool play = true;
+	static bool play;
 #pragma region Lab1
 #if LAB1
 	int num = 0;
@@ -49,5 +49,6 @@ public:
 #endif
 #pragma endregion
 	static void ChangeState(STATE_TYPES _state);
+	static void SetPlay(const bool _play) { play = _play; }
 };
 

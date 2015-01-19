@@ -47,6 +47,11 @@ void MenuState::Input()
 			Game::ChangeState(OPTION_STATE);
 			break;
 		}
+		case 2:
+		{
+			Game::ChangeState(EXIT_STATE);
+			break;
+		}
 		default:
 			break;
 		}

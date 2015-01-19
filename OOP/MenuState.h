@@ -5,7 +5,7 @@ class MenuState :
 {
 private:
 	int menuNum;
-	char* menuStrings[3];
+	string menuStrings[3];
 
 	bool buttonPressed = false;
 
