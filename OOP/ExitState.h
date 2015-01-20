@@ -1,17 +1,28 @@
 #pragma once
 #include "BaseState.h"
-class ExitState :
-	public BaseState
+
+
+/** @brief ExitState class exit state.
+*
+*	@author Junshu Chen
+*	@date Jan 2015
+*/
+class ExitState : public BaseState
 {
 public:
 	ExitState();
 	~ExitState();
 
-
+	/** Enter ExitState and set Game::play to false to terminate the game.
+	*/
 	void Enter();
-	void Exit();
-	void Input();
-	void Update(int _iframe);
+
+	/** Render Exit message on screen.
+	*/
 	void Render();
+
+	void Update(int _frame);
+	void Input();
+	void Exit();
 };
 

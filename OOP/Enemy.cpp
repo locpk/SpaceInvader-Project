@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Enemy.h"
+#include "Player.h"
 #include"GameState.h"
 #include "Missile.h"
 
@@ -50,7 +51,13 @@ void Enemy::Update(int _frame)
 		if (GetHP() <= 20)
 			SetForeGround(Red);
 		if (GetHP() <= 0)
+		{
 			SetAlive(false);
+			vector<BaseObject*> tempObjects = (*GameState::GetObjects());
+			Player* p = dynamic_cast<Player*>(tempObjects[0]);
+			p->SetKillCount(p->GetKillCount() + 1);
+		}
+			
 	}
 
 	//enemy shooting every 10 frames

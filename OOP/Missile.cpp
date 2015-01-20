@@ -86,7 +86,7 @@ bool Missile::Collides(const int _newX, const int _newY)
 					p->SetScore(p->GetScore() + 5);
 					Enemy* e = dynamic_cast<Enemy*>(tempObjects[i]);
 					e->SetHP(e->GetHP() - 5);
-					SetAlive(false);
+					SetAlive(false); // Set current missile to dead
 					collided = true;
 					break; // break the inner loop
 				}

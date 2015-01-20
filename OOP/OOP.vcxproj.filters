@@ -19,6 +19,9 @@
     <Text Include="MenuART.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Images.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">

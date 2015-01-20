@@ -10,7 +10,15 @@ vector<BaseObject*> GameState::gameObjects;
 
 GameState::GameState()
 {
-	gameObjects.push_back(new Player("Bob",0,0,"  __\n| \"\"\"\\-=\n(____)",Cyan,Black,Console::WindowWidth() >> 1,Console::WindowHeight()>>1));
+	ReadObFromFile();
+	gameObjects.push_back(new Player("Bob", 0, 0, readInObjects[1]->GetText(), readInObjects[1]->GetForeGround(), readInObjects[1]->GetBackGround(), readInObjects[1]->GetX(), readInObjects[1]->GetY()));
+	int i = 0;
+	for (; i < (int)readInObjects.size(); i++)
+	{
+		delete readInObjects[i];
+	}
+
+
 }
 
 
@@ -50,11 +58,27 @@ void GameState::Update(int _frame)
 	{
 		if (!(*iter)->GetAlive())
 		{
+			if (ENEMY == (*iter)->GetID())
+				enemyCount--;
 			delete *iter;
 			gameObjects.erase(iter--);
 		}
 
 		++iter;
+	}
+
+	//Respawn enemies if they all dead 
+	if (enemyCount <= 0)
+	{
+		int i = 0;
+		for (; i < GetInfo().enemyNum; ++i)
+		{
+			Enemy* e = new Enemy();
+			e->SetX(2 * i + 1);
+			e->SetY(2 * i + 1);
+			gameObjects.push_back(e);
+			enemyCount++;
+		}
 	}
 	// Game over if player is dead
 	if (!gameObjects[PLAYER_SUB]->GetAlive())
@@ -65,12 +89,12 @@ void GameState::Update(int _frame)
 void GameState::Render()
 {
 	int i = 0;
-	for (; i <(int)gameObjects.size(); i++)
+	for (; i < (int)gameObjects.size(); i++)
 	{
 		gameObjects[i]->Render();
 	}
 }
-	 
+
 void GameState::Enter()
 {
 	Console::Clear();
@@ -100,9 +124,9 @@ void GameState::Enter()
 	{
 		Enemy* e = new Enemy();
 		e->SetX(2 * i + 1);
-		e->SetY(2 * i +1);
-
+		e->SetY(2 * i + 1);
 		gameObjects.push_back(e);
+		enemyCount++;
 	}
 }
 void GameState::Exit()
@@ -115,6 +139,7 @@ void GameState::Exit()
 	PlayerInfo info;
 	info.score = p->GetScore();
 	info.diff = p->GetDiff();
+	info.killCount = p->GetKillCount();
 	strcpy_s(info.buffer, 32, p->GetName());
 
 	string tempLine = p->GetName();
@@ -127,20 +152,20 @@ void GameState::Exit()
 		Sleep(50);
 		cout << tempLine[i];
 	}
-	
 
 
-	
+
+
 
 	vector<PlayerInfo> scores;
 	scores.push_back(info);
-	fstream bout,tout;
+	fstream bout, tout;
 	bout.open("scores.bin", ios_base::binary | ios_base::app | ios_base::out);
 	tout.open("scores.txt", ios_base::app | ios_base::out);
 
 	if (bout.is_open())
 	{
-		
+
 		bout.write((char*)scores.data(), sizeof(PlayerInfo)* scores.size());
 
 		bout.close();
@@ -151,8 +176,24 @@ void GameState::Exit()
 		tout.close();
 	}
 	Sleep(1500);
-	
 
+	gameObjects[PLAYER_SUB]->SetAlive(true);
+	p->SetHP(100);
+	p->SetForeGround(Cyan);
+
+	//delete everything except player in the gameObjects array.
+	vector<BaseObject*>::iterator iter;
+	iter = gameObjects.begin() + 1;
+	while (iter != gameObjects.end())
+	{
+		if (PLAYER != (*iter)->GetID())
+		{
+			delete *iter;
+			gameObjects.erase(iter--);
+		}
+		++iter;
+	}
+	enemyCount = 0;
 	//Replay
 	//Console::FlushKeys();
 	//Console::SetCursorPosition((Console::WindowWidth() >> 1) - 10, Console::WindowHeight() >> 1);
@@ -180,5 +221,46 @@ void GameState::Exit()
 	//else
 	//	Game::ChangeState(MENU_STATE);
 	//
+
+}
+
+
+void GameState::ReadObFromFile()
+{
+	ifstream fin;
+	int fg, bg, x, y, numofRI;
+	fg = bg = x = y = numofRI = 0;
+	char buffer[500];
+	fin.open("images.txt");
+	if (fin.is_open())
+	{
+		fin >> numofRI; //read the Object count in the first line
+		for (int i = 0; i < numofRI; i++)
+		{
+			readInObjects.push_back(new BaseObject());
+		}
+		fin.ignore(LLONG_MAX, '\n');
+		int i = 0;
+		while (!fin.eof() && i < numofRI)
+		{
+			buffer[0] = '\0';
+			fin.get(buffer, 500, '\t');
+			readInObjects[i]->SetText(buffer);
+			//fin.ignore(LLONG_MAX, '\t');
+			fin >> fg;
+			readInObjects[i]->SetForeGround((ConsoleColor)fg);
+			fin.ignore(LLONG_MAX, '\t');
+			fin >> bg;
+			readInObjects[i]->SetBackGround((ConsoleColor)bg);
+			fin >> x;
+			readInObjects[i]->SetX(x);
+			fin.ignore(LLONG_MAX, '\t');
+			fin >> y;
+			readInObjects[i]->SetY(y);
+			fin.ignore(LLONG_MAX, '\n');
+			i++;
+		}
+		fin.close();
+	}
 
 }

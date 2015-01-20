@@ -1,0 +1,11 @@
+Bob	500	1
+Bob	565	1
+Bob	565	1
+Bob	0	1
+Bob	0	1
+Bob	0	1
+Bob	0	1
+Bob	0	1
+Bob	0	1
+Bob	0	1
+Bob	500	3

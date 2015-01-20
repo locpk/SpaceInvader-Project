@@ -26,5 +26,4 @@
 using namespace std;
 using namespace System;
 
-#define NUMOFGO 2 // number of game objects
 #define PLAYER_SUB 0 // subscript for player in gameObjects array

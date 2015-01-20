@@ -92,13 +92,18 @@ void MenuState::Render()
 	{
 		if (menuNum == i)
 		{
-			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 10, 25 + i);
+			Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 9, 25 + i);
+			Console::ForegroundColor(Yellow);
 			cout << "->";
+			cout << menuStrings[i];
+			Console::ResetColor();
 		}
 		else
-			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 8, 25 + i);
-
-		cout << menuStrings[i];
+		{
+			Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 8, 25 + i);
+			cout << menuStrings[i];
+		}
+			
 	}
 }
 

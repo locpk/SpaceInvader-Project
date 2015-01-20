@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="Images.txt" />
     <Text Include="MenuART.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>

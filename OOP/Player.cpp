@@ -59,7 +59,7 @@ void Player::Input()
 		int newX = GetX() + dx;
 		int newY = GetY() + dy;
 
-		if (!OutOfBounds(newX, newY) && !Collides( newX, newY))
+		if (!OutOfBounds(newX, newY) && !Collides(newX, newY))
 		{
 
 			SetX(GetX() + dx); SetY(GetY() + dy);
@@ -104,7 +104,7 @@ void Player::Input()
 		(*tempObjects).push_back(r);
 		SetNumofRK(GetNumofRK() - 1);
 	}
-	
+
 }
 void Player::Update(int _frame)
 {
@@ -125,7 +125,7 @@ void Player::Update(int _frame)
 void Player::Render()
 {
 	Console::SetCursorPosition(0, 0);
-	cout << "Name: " << name << " HP: " << hp;
+	cout << "Name: " << name << " HP: " << hp << " Kills: " << killCount;
 	Console::SetCursorPosition(Console::WindowWidth() >> 1, 0);
 	cout << "Score: " << score;
 	Console::SetCursorPosition(Console::WindowWidth() - 15, 0);
@@ -160,10 +160,10 @@ bool Player::Collides(const int _newX, const int _newY)
 		{
 
 		case ENEMY:
-			 left = tempObjects[i]->GetX();
-			 top = tempObjects[i]->GetY();
-			 right = left + tempObjects[i]->GetWidth();
-			 bottom = top + tempObjects[i]->GetHeight();
+			left = tempObjects[i]->GetX();
+			top = tempObjects[i]->GetY();
+			right = left + tempObjects[i]->GetWidth();
+			bottom = top + tempObjects[i]->GetHeight();
 
 			if (_newX >= right ||
 				_newX + GetWidth() <= left ||
