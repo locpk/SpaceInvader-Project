@@ -9,3 +9,6 @@ Bob	0	1
 Bob	0	1
 Bob	0	1
 Bob	500	3
+Bob	200	1
+Bob	135	1
+Bob	50	1

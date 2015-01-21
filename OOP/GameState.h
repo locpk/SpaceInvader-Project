@@ -3,6 +3,7 @@
 
 
 class BaseObject;
+struct Cell;
 
 /** @brief GameState class control actual gameplay.
 *	@author Junshu Chen
@@ -13,6 +14,7 @@ class GameState : public BaseState
 private:
 	static vector<BaseObject*> gameObjects;
 	vector<BaseObject*> readInObjects; //An array of Objects read from file images.txt
+	vector<Cell*> stars;
 	int enemyCount = 0;
 public:
 	/** Constructor 
@@ -55,5 +57,11 @@ public:
 	*/
 	void ReadObFromFile(); //
 
+	/** Check if the spot has been taken.
+	*	@param _left the left offset.
+	*	@param _top the top offset.
+	*	@true is the spot has been taken.
+	*/
+	bool StarsSpotCheck(int _left, int _top);
 };
 

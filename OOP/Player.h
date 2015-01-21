@@ -120,5 +120,6 @@ public:
 	*/
 	bool Collides(const int _newX, const int _newY);
 	
+	void Reset();
 };
 

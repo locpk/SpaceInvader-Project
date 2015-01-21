@@ -8,7 +8,8 @@ MenuState::MenuState()
 	menuNum = 0;
 	menuStrings[0] = "Play";
 	menuStrings[1] = "Options";
-	menuStrings[2] = "Exit";
+	menuStrings[2] = "HighScore";
+	menuStrings[3] = "Exit";
 
 
 	fstream fin;
@@ -49,9 +50,12 @@ void MenuState::Input()
 		}
 		case 2:
 		{
-			Game::ChangeState(EXIT_STATE);
+			Game::ChangeState(HIGHSCORE_STATE);
 			break;
 		}
+		case 3:
+			Game::ChangeState(EXIT_STATE);
+			break;
 		default:
 			break;
 		}
@@ -72,23 +76,25 @@ void MenuState::Input()
 	}
 
 	if (menuNum < 0)
-		menuNum = 2;
+		menuNum = 3;
 
-	if (menuNum > 2)
+	if (menuNum > 3)
 		menuNum = 0;
 }
 
 void MenuState::Update(int _frame)
 {
-	if (!GetAsyncKeyState('W') && !GetAsyncKeyState('S') && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_DOWN))
+	if (!GetAsyncKeyState('W') && !GetAsyncKeyState('S') && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_DOWN) && !GetAsyncKeyState(VK_RETURN))
 		buttonPressed = false;
 }
 
 void MenuState::Render()
 {
+	Console::Lock(true);
+	Console::Clear();
 	cout << menuArt;
 	int i = 0;
-	for (; i < 3; ++i)
+	for (; i < 4; ++i)
 	{
 		if (menuNum == i)
 		{
@@ -105,6 +111,7 @@ void MenuState::Render()
 		}
 			
 	}
+	Console::Lock(false);
 }
 
 void MenuState::Enter()

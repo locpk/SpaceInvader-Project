@@ -188,3 +188,15 @@ bool Player::Collides(const int _newX, const int _newY)
 	}
 	return collided;
 }
+
+void Player::Reset()
+{
+	SetAlive(true);
+	SetHP(100);
+	SetForeGround(Cyan);
+	SetKillCount(0);
+	SetLaunched(false);
+	SetNumofHM(10);
+	SetNumofRK(5);
+	SetScore(0);
+}

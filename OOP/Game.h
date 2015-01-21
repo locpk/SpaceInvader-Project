@@ -6,7 +6,7 @@ class BaseState;
 
 /** @brief STATE_TYPES enum as a state machine indication.
 */
-enum STATE_TYPES { MENU_STATE = 0, GAME_STATE, OPTION_STATE, EXIT_STATE };
+enum STATE_TYPES { MENU_STATE = 0, GAME_STATE, OPTION_STATE, HIGHSCORE_STATE ,EXIT_STATE };
 
 
 /** @brief Game class.

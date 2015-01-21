@@ -21,7 +21,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-
+#include <ctime>
 #include "Console.h"
 using namespace std;
 using namespace System;

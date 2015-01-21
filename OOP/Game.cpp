@@ -7,6 +7,7 @@
 #include "GameState.h"
 #include "MenuState.h"
 #include "OptionState.h"
+#include "HighScoreState.h"
 #include "ExitState.h"
 
 
@@ -22,6 +23,7 @@ Game::Game()
 	states.push_back(new MenuState());
 	states.push_back(new GameState());
 	states.push_back(new OptionState());
+	states.push_back(new HighScoreState());
 	states.push_back(new ExitState());
 }
 

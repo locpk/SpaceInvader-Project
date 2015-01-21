@@ -91,6 +91,8 @@ bool Missile::Collides(const int _newX, const int _newY)
 					break; // break the inner loop
 				}
 			}
+			else
+				return false;
 		}
 		break;
 	case ENEMY_MISSILE:

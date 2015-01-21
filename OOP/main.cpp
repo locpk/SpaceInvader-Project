@@ -12,11 +12,10 @@ int _tmain()
 	// and then trace back through the call stack to find the leak.
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetBreakAlloc(-1);
-
+	srand(static_cast<unsigned int>(time(nullptr)));
 	Game g;
 	g.Play();
 
-	system("pause");
 	return 0;
 }
 

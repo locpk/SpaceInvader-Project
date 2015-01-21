@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Missile.h"
 #include "Game.h"
+#include "Cell.h"
 vector<BaseObject*> GameState::gameObjects;
 
 
@@ -18,7 +19,12 @@ GameState::GameState()
 		delete readInObjects[i];
 	}
 
-
+	stars.resize(rand() % 11 + 10);
+	for (i = 0; i < (int)stars.size(); i++)
+	{
+		stars.push_back(new Cell(0, 0, ConsoleColor(rand() % 16), ConsoleColor(rand() % 16), '*'));
+	}
+	
 }
 
 
@@ -29,6 +35,12 @@ GameState::~GameState()
 	{
 		delete gameObjects[i];
 	}
+
+	for ( i = 0; i < (int)stars.size(); i++)
+	{
+		delete stars[i];
+	}
+	stars.clear();
 
 }
 
@@ -93,6 +105,13 @@ void GameState::Render()
 	{
 		gameObjects[i]->Render();
 	}
+
+	
+	for ( i = 0; i < (int)stars.size(); i++)
+	{
+		
+	}
+
 }
 
 void GameState::Enter()
@@ -177,9 +196,8 @@ void GameState::Exit()
 	}
 	Sleep(1500);
 
-	gameObjects[PLAYER_SUB]->SetAlive(true);
-	p->SetHP(100);
-	p->SetForeGround(Cyan);
+	//reset player
+	p->Reset();
 
 	//delete everything except player in the gameObjects array.
 	vector<BaseObject*>::iterator iter;
@@ -263,4 +281,15 @@ void GameState::ReadObFromFile()
 		fin.close();
 	}
 
+}
+
+bool GameState::StarsSpotCheck(int _left, int _top)
+{
+	bool x = false;
+	bool y = false;
+	int i = 0;
+	for ( i = 0; i < (int)stars.size(); i++)
+	{
+		
+	}
 }

@@ -9,7 +9,7 @@ class MenuState : public BaseState
 {
 private:
 	int menuNum;
-	string menuStrings[3];
+	string menuStrings[4];
 	bool buttonPressed = false; 
 	string menuArt;
 
