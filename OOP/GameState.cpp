@@ -6,7 +6,7 @@
 #include "Missile.h"
 #include "Game.h"
 #include "Cell.h"
-vector<BaseObject*> GameState::gameObjects;
+DList<BaseObject*> GameState::gameObjects;
 
 
 GameState::GameState()
@@ -19,35 +19,27 @@ GameState::GameState()
 		delete readInObjects[i];
 	}
 
-	stars.resize(rand() % 11 + 10);
-	for (i = 0; i < (int)stars.size(); i++)
-	{
-		stars.push_back(new Cell(0, 0, ConsoleColor(rand() % 16), ConsoleColor(rand() % 16), '*'));
-	}
-	
+	numofStars = (2 * (rand() % 6 + 5));
+	stars = new Cell<>[numofStars];
+	GenerateStars();
 }
 
 
 GameState::~GameState()
 {
 	int i = 0;
-	for (; i < (int)gameObjects.size(); i++)
+	for (; i < gameObjects.Size(); i++)
 	{
 		delete gameObjects[i];
 	}
-
-	for ( i = 0; i < (int)stars.size(); i++)
-	{
-		delete stars[i];
-	}
-	stars.clear();
+	delete[] stars;
 
 }
 
 void GameState::Input()
 {
 	int i = 0;
-	for (; i < (int)gameObjects.size(); i++)
+	for (; i < (int)gameObjects.Size(); i++)
 	{
 		gameObjects[i]->Input();
 	}
@@ -59,24 +51,20 @@ void GameState::Input()
 void GameState::Update(int _frame)
 {
 	int i = 0;
-	for (; i < (int)gameObjects.size(); i++)
+	for (; i < (int)gameObjects.Size(); i++)
 	{
 		gameObjects[i]->Update(_frame);
 	}
 
-	vector<BaseObject*>::iterator iter;
-	iter = gameObjects.begin() + 1;
-	while (iter != gameObjects.end())
+	for (int i = 0; i < gameObjects.Size(); i++)
 	{
-		if (!(*iter)->GetAlive())
+		if (gameObjects[i]->GetID() == ENEMY && gameObjects[i]->GetAlive() == false)
 		{
-			if (ENEMY == (*iter)->GetID())
-				enemyCount--;
-			delete *iter;
-			gameObjects.erase(iter--);
+			delete gameObjects[i];
+			gameObjects.erase(i);
+			enemyCount--;
 		}
 
-		++iter;
 	}
 
 	//Respawn enemies if they all dead 
@@ -101,16 +89,17 @@ void GameState::Update(int _frame)
 void GameState::Render()
 {
 	int i = 0;
-	for (; i < (int)gameObjects.size(); i++)
+	for (; i < numofStars; i++)
+	{
+		stars[i].Show(0, 0);
+	}
+
+	for (i = 0; i < (int)gameObjects.Size(); i++)
 	{
 		gameObjects[i]->Render();
 	}
 
-	
-	for ( i = 0; i < (int)stars.size(); i++)
-	{
-		
-	}
+
 
 }
 
@@ -164,7 +153,9 @@ void GameState::Exit()
 	string tempLine = p->GetName();
 	tempLine += " earned ";
 	tempLine += to_string(p->GetScore());
-	tempLine += " points on a difficulty of ";
+	tempLine += " by Killing ";
+	tempLine += to_string(p->GetKillCount());
+	tempLine += " enemies on Difficulty ";
 	tempLine += to_string(p->GetDiff());
 	for (size_t i = 0; i < tempLine.length(); i++)
 	{
@@ -200,16 +191,11 @@ void GameState::Exit()
 	p->Reset();
 
 	//delete everything except player in the gameObjects array.
-	vector<BaseObject*>::iterator iter;
-	iter = gameObjects.begin() + 1;
-	while (iter != gameObjects.end())
+
+	for (int i = 1; i < gameObjects.Size(); i++)
 	{
-		if (PLAYER != (*iter)->GetID())
-		{
-			delete *iter;
-			gameObjects.erase(iter--);
-		}
-		++iter;
+		delete gameObjects[i];
+		gameObjects.erase(i);
 	}
 	enemyCount = 0;
 	//Replay
@@ -283,13 +269,32 @@ void GameState::ReadObFromFile()
 
 }
 
-bool GameState::StarsSpotCheck(int _left, int _top)
+void GameState::GenerateStars()
 {
-	bool x = false;
-	bool y = false;
-	int i = 0;
-	for ( i = 0; i < (int)stars.size(); i++)
+	int i = 0; // give each stars a random color
+	for (; i < numofStars; i++)
 	{
-		
+		int fg = rand() % 16 + 1;
+		int bg = rand() % 16 + 1;
+		int oX = rand() % Console::WindowWidth();
+		int oY = rand() % (Console::WindowHeight() - 2) + 1;
+		while (fg == bg)
+		{
+			fg = rand() % 16 + 1;
+			bg = rand() % 16 + 1;
+		}
+		for (int j = 0; j < i; j++)
+		{
+			if (oX == stars[j].oX && oY == stars[j].oY)
+			{
+				oX = rand() % Console::WindowWidth();
+				oY = rand() % (Console::WindowHeight() - 2) + 1;
+				j = 0;
+			}
+		}
+		stars[i] = Cell<>(oX, oY, ConsoleColor(fg), ConsoleColor(bg), '*');
 	}
+
+
+
 }

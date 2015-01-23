@@ -17,30 +17,37 @@ HomingMissile::~HomingMissile()
 
 void HomingMissile::Update(int _frame)
 {
-	vector<BaseObject*>* tempObjects = GameState::GetObjects();
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
+	vector<int> enemies;
+	for (int i = 0; i < tempObjects.Size(); i++)
+	{
+		if (tempObjects[i]->GetID() == ENEMY)
+			enemies.push_back(i);
+	}
+	int target = enemies[rand() % enemies.size()];
 	bool left, right, up, down;
 	left = right = up = down = false;
 
 	if (GetAlive())
 	{
 
-		if ((*tempObjects)[1]->GetX() > GetX())
+		if ((tempObjects)[target]->GetX() > GetX())
 			right = true;
-		if ((*tempObjects)[1]->GetX() < GetX())
+		if ((tempObjects)[target]->GetX() < GetX())
 			left = true;
-		if ((*tempObjects)[1]->GetY() < GetY())
+		if ((tempObjects)[target]->GetY() < GetY())
 			up = true;
-		if ((*tempObjects)[1]->GetY() > GetY())
+		if ((tempObjects)[target]->GetY() > GetY())
 			down = true;
 
-		if ((*tempObjects)[1]->GetX() > GetX() && (*tempObjects)[1]->GetY() == GetY())
+		if ((tempObjects)[target]->GetX() > GetX() && (tempObjects)[target]->GetY() == GetY())
 		{
 			right = true;
 			down = false;
 			up = false;
 			left = false;
 		}
-		if ((*tempObjects)[1]->GetX() < GetX() && (*tempObjects)[1]->GetY() == GetY())
+		if ((tempObjects)[target]->GetX() < GetX() && (tempObjects)[target]->GetY() == GetY())
 		{
 			left = true;
 			down = false;

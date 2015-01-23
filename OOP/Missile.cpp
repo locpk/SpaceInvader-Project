@@ -55,7 +55,7 @@ void Missile::Render()
 
 bool Missile::Collides(const int _newX, const int _newY)
 {
-	vector<BaseObject*> tempObjects = (*GameState::GetObjects());
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 	bool collided = false;
 	int left, top, right, bottom;
 	left = top = right = bottom = 0;
@@ -64,7 +64,7 @@ bool Missile::Collides(const int _newX, const int _newY)
 	{
 	case PLAYER_MISSILE:
 	case PLAYER_HOMING_MISSILE: // check collision based on the owner. Enemy missiles only collide with player. Player Missile only collide with enemy.
-		for (int i = 1; i < (int)tempObjects.size(); i++)
+		for (int i = 1; i < (int)tempObjects.Size(); i++)
 		{
 			if (ENEMY == tempObjects[i]->GetID())
 			{

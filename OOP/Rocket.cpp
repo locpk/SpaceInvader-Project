@@ -23,9 +23,9 @@ void Rocket::Update(int _frame)
 
 		if (_frame % 35 == 0)
 		{
-			vector<BaseObject*> tempObjects = (*GameState::GetObjects());
+			DList<BaseObject*>& tempObjects = GameState::GetObjects();
 			Player* p = dynamic_cast<Player*>(tempObjects[0]);
-			for (size_t i = 0; i < tempObjects.size(); i++)
+			for (int i = 0; i < tempObjects.Size(); i++)
 			{
 				if (tempObjects[i]->GetID() == ENEMY)
 				{

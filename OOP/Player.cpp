@@ -47,7 +47,7 @@ void Player::Input()
 {
 	int dx, dy;
 	dx = dy = 0;
-	vector<BaseObject*>* tempObjects = GameState::GetObjects();
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 
 	if (GetAsyncKeyState('W')) dy = -1;
 	if (GetAsyncKeyState('S')) dy = 1;
@@ -77,7 +77,7 @@ void Player::Input()
 		m->SetAlive(true);
 		m->SetX(GetX() + (GetWidth() >> 1));
 		m->SetY(GetY());
-		(*tempObjects).push_back(m);
+		tempObjects.push_back(m);
 	}
 	if (GetAsyncKeyState(VK_NUMPAD5) && !buttonPressed && GetNumofHM() > 0)
 	{
@@ -88,7 +88,7 @@ void Player::Input()
 		h->SetAlive(true);
 		h->SetX(GetX() + (GetWidth() >> 1));
 		h->SetY(GetY());
-		(*tempObjects).push_back(h);
+		(tempObjects).push_back(h);
 		SetNumofHM(GetNumofHM() - 1);
 	}
 	if (GetAsyncKeyState(VK_NUMPAD6) && !buttonPressed && GetNumofRK() > 0 && !GetLaunched())
@@ -101,7 +101,7 @@ void Player::Input()
 		r->SetAlive(true);
 		r->SetX(GetX() + (GetWidth() >> 1));
 		r->SetY(GetY() - 10);
-		(*tempObjects).push_back(r);
+		(tempObjects).push_back(r);
 		SetNumofRK(GetNumofRK() - 1);
 	}
 
@@ -149,12 +149,12 @@ void Player::Render()
 bool Player::Collides(const int _newX, const int _newY)
 {
 	int i = 0;
-	vector<BaseObject*> tempObjects = (*GameState::GetObjects());
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 	bool collided = false;
 	int left, top, right, bottom;
 	left = top = right = bottom = 0;
 
-	for (; i < (int)tempObjects.size(); ++i)
+	for (; i < (int)tempObjects.Size(); ++i)
 	{
 		switch (tempObjects[i]->GetID())
 		{
@@ -178,8 +178,6 @@ bool Player::Collides(const int _newX, const int _newY)
 				collided = true;
 				break;
 			}
-			break;
-		case ENEMY_MISSILE:
 			break;
 		default:
 			break;

@@ -1,9 +1,10 @@
 #pragma once
 #include "BaseState.h"
-
+#include "Cell.h"
 
 class BaseObject;
-struct Cell;
+
+
 
 /** @brief GameState class control actual gameplay.
 *	@author Junshu Chen
@@ -12,12 +13,13 @@ struct Cell;
 class GameState : public BaseState
 {
 private:
-	static vector<BaseObject*> gameObjects;
+	static DList<BaseObject*> gameObjects;
 	vector<BaseObject*> readInObjects; //An array of Objects read from file images.txt
-	vector<Cell*> stars;
 	int enemyCount = 0;
+	int numofStars;
+	Cell<>* stars;
 public:
-	/** Constructor 
+	/** Constructor
 	*	load player Image2D from file "Images.txt"
 	*/
 	GameState();
@@ -51,17 +53,14 @@ public:
 	/** Return a point to gameObject array.
 	*	@return the address of the vector array of gameObjects
 	*/
-	static vector<BaseObject*>* GetObjects() { return &gameObjects; }
+	static DList<BaseObject*>& GetObjects() { return gameObjects; }
 
 	/** Load readInObjects Array  from file "images.txt".
 	*/
 	void ReadObFromFile(); //
 
-	/** Check if the spot has been taken.
-	*	@param _left the left offset.
-	*	@param _top the top offset.
-	*	@true is the spot has been taken.
+	/** Generate stars on screen
 	*/
-	bool StarsSpotCheck(int _left, int _top);
+	void GenerateStars();
 };
 

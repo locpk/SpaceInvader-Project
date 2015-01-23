@@ -83,6 +83,7 @@
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DList.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="ExitState.h" />
     <ClInclude Include="Game.h" />
@@ -101,7 +102,6 @@
   <ItemGroup>
     <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="BaseState.cpp" />
-    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ExitState.cpp" />

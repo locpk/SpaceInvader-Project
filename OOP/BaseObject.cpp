@@ -93,10 +93,10 @@ void BaseObject::Render()
 bool BaseObject::Collides(const int _newX, const int _newY)
 {
 	int i = 0;
-	vector<BaseObject*> tempObjects = (*GameState::GetObjects());
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 	bool collided = false;
 
-	for (; i < (int)tempObjects.size(); ++i)
+	for (; i < (int)tempObjects.Size(); ++i)
 	{
 
 		int left = tempObjects[i]->GetX();
