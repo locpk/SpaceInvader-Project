@@ -30,7 +30,7 @@ void Rocket::Update(int _frame)
 				if (tempObjects[i]->GetID() == ENEMY)
 				{
 					Enemy* e = dynamic_cast<Enemy*>(tempObjects[i]);
-					e->SetHP(0);
+					e->SetHP(e->GetHP() - 100);
 					p->SetScore(p->GetScore() + 100);
 				}
 			}

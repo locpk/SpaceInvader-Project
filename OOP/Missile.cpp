@@ -64,7 +64,7 @@ bool Missile::Collides(const int _newX, const int _newY)
 	{
 	case PLAYER_MISSILE:
 	case PLAYER_HOMING_MISSILE: // check collision based on the owner. Enemy missiles only collide with player. Player Missile only collide with enemy.
-		for (int i = 1; i < (int)tempObjects.Size(); i++)
+		for (int i = 0; i < (int)tempObjects.Size(); i++)
 		{
 			if (ENEMY == tempObjects[i]->GetID())
 			{
@@ -91,8 +91,6 @@ bool Missile::Collides(const int _newX, const int _newY)
 					break; // break the inner loop
 				}
 			}
-			else
-				return false;
 		}
 		break;
 	case ENEMY_MISSILE:

@@ -12,12 +12,10 @@ Enemy::Enemy()
 	SetY(3);
 }
 Enemy::Enemy(const int _velocity,
-	const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, short _x, short _y) : BaseObject(_text, _fg, _bg, _x, _y)
+	const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg,  const int _hp, short _x, short _y) : BaseObject(_text, _fg, _bg, _x, _y)
 {
 	SetID(ENEMY);
-	SetText("<-O->");
-	SetX(System::Console::WindowWidth() >> 1);
-	SetY(3);
+	SetHP(_hp);
 }
 
 Enemy::~Enemy()
@@ -57,7 +55,7 @@ void Enemy::Update(int _frame)
 			Player* p = dynamic_cast<Player*>(tempObjects[0]);
 			p->SetKillCount(p->GetKillCount() + 1);
 		}
-			
+
 	}
 
 	//enemy shooting every 10 frames
@@ -94,10 +92,10 @@ bool Enemy::Collides(const int _newX, const int _newY)
 		{
 
 		case PLAYER:
-			 left = tempObjects[i]->GetX();
-			 top = tempObjects[i]->GetY();
-			 right = left + tempObjects[i]->GetWidth();
-			 bottom = top + tempObjects[i]->GetHeight();
+			left = tempObjects[i]->GetX();
+			top = tempObjects[i]->GetY();
+			right = left + tempObjects[i]->GetWidth();
+			bottom = top + tempObjects[i]->GetHeight();
 
 			if (_newX >= right ||
 				_newX + GetWidth() <= left ||

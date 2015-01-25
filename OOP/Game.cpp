@@ -55,8 +55,8 @@ void Game::Input()
 
 	currentState->Input();
 
-	if (GetAsyncKeyState(VK_ESCAPE))
-		play = false;
+	/*if (GetAsyncKeyState(VK_ESCAPE))
+		play = false;*/
 
 	
 

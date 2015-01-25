@@ -13,11 +13,7 @@ GameState::GameState()
 {
 	ReadObFromFile();
 	gameObjects.push_back(new Player("Bob", 0, 0, readInObjects[1]->GetText(), readInObjects[1]->GetForeGround(), readInObjects[1]->GetBackGround(), readInObjects[1]->GetX(), readInObjects[1]->GetY()));
-	int i = 0;
-	for (; i < (int)readInObjects.size(); i++)
-	{
-		delete readInObjects[i];
-	}
+	
 
 	numofStars = (2 * (rand() % 6 + 5));
 	stars = new Cell<>[numofStars];
@@ -31,6 +27,10 @@ GameState::~GameState()
 	for (; i < gameObjects.Size(); i++)
 	{
 		delete gameObjects[i];
+	}
+	for (i = 0; i < (int)readInObjects.size(); i++)
+	{
+		delete readInObjects[i];
 	}
 	delete[] stars;
 
@@ -68,7 +68,7 @@ void GameState::Update(int _frame)
 	}
 
 	//Respawn enemies if they all dead 
-	if (enemyCount <= 0)
+	if (enemyCount <= 0 && waves < MAXWAVES)
 	{
 		int i = 0;
 		for (; i < GetInfo().enemyNum; ++i)
@@ -79,6 +79,15 @@ void GameState::Update(int _frame)
 			gameObjects.push_back(e);
 			enemyCount++;
 		}
+		waves++;
+		
+	}
+	if (waves == MAXWAVES && boss < MAXBOSS)
+	{
+		Enemy* e = new Enemy(1, readInObjects[0]->GetText(), Green, Black,1000, readInObjects[1]->GetX(), readInObjects[1]->GetY());
+		gameObjects.push_back(e);
+		enemyCount = 1;
+		boss++;
 	}
 	// Game over if player is dead
 	if (!gameObjects[PLAYER_SUB]->GetAlive())

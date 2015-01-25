@@ -19,9 +19,6 @@ void ExitState::Enter()
 
 void ExitState::Render()
 {
-	Console::Clear();
-	Console::SetCursorPosition(Console::WindowWidth() >> 1, Console::WindowHeight() >> 1);
-	cout << "Bye!";
 }
 
 void ExitState::Update(int _frame)

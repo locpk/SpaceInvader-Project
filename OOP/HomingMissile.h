@@ -7,8 +7,8 @@
 */
 class HomingMissile : public Missile
 {
-
-
+private:
+	int target;
 public:
 	HomingMissile();
 	~HomingMissile();

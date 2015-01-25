@@ -54,13 +54,13 @@ void OptionState::Input()
 		buttonPressed = true;
 	}
 
-	if (GetAsyncKeyState('W') && !buttonPressed)
+	if ((GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP)) && !buttonPressed)
 	{
 		--menuNum;
 		buttonPressed = true;
 	}
 
-	if (GetAsyncKeyState('S') && !buttonPressed)
+	if ((GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN)) && !buttonPressed)
 	{
 		++menuNum;
 		buttonPressed = true;
@@ -74,7 +74,7 @@ void OptionState::Input()
 }
 void OptionState::Update(int _frame)
 {
-	if (!GetAsyncKeyState('W') && !GetAsyncKeyState('S') && !GetAsyncKeyState(VK_RETURN))
+	if (!GetAsyncKeyState('W') && !GetAsyncKeyState('S') && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_DOWN) && !GetAsyncKeyState(VK_RETURN))
 		buttonPressed = false;
 }
 void OptionState::Render()
@@ -84,25 +84,31 @@ void OptionState::Render()
 	{
 		if (menuNum == i)
 		{
-			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 10, 10 + i);
+			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 9, 20 + i);
+			Console::ForegroundColor(Yellow);
 			cout << "->";
+			cout << menuStrings[i];
+			Console::ResetColor();
 		}
 		else
-			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 8, 10 + i);
+		{
+			System::Console::SetCursorPosition((System::Console::WindowWidth() >> 1) - 8, 20 + i);
+			cout << menuStrings[i];
+		}
 
-		cout << menuStrings[i];
-
+		Console::ForegroundColor(Red);
 		if (i == 0)
 			cout << enemyNum;
 		else if (i == 1)
 			cout << diff;
+		Console::ResetColor();
 	}
 }
 void OptionState::Enter()
 {
 	enemyNum = diff = 1;
-	System::Console::FlushKeys();
-	Sleep(15);
+	Console::FlushKeys();
+	Sleep(100);
 }
 void OptionState::Exit()
 {

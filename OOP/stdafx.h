@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <algorithm> 
 #include "Console.h"
 #include "DList.h"
 using namespace std;

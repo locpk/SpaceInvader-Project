@@ -30,7 +30,7 @@ public:
 	* @param _y y-position default is 0.
 	*/
 	Enemy(const int _velocity,
-		const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, const short _x = 0, const short _y = 0);
+		const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, const int _hp, const short _x = 0, const short _y = 0);
 
 	/**
 	* Destructor.

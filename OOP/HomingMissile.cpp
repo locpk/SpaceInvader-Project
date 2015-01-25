@@ -4,7 +4,17 @@
 
 HomingMissile::HomingMissile()
 {
-	
+	DList<BaseObject*>& tempObjects = GameState::GetObjects();
+
+	//random get a target.
+	vector<int> enemies;
+	for (int i = 0; i < tempObjects.Size(); i++)
+	{
+		if (tempObjects[i]->GetID() == ENEMY)
+			enemies.push_back(i);
+	}
+	target = enemies[rand() % enemies.size()];
+	enemies.clear();
 }
 
 
@@ -18,13 +28,9 @@ HomingMissile::~HomingMissile()
 void HomingMissile::Update(int _frame)
 {
 	DList<BaseObject*>& tempObjects = GameState::GetObjects();
-	vector<int> enemies;
-	for (int i = 0; i < tempObjects.Size(); i++)
-	{
-		if (tempObjects[i]->GetID() == ENEMY)
-			enemies.push_back(i);
-	}
-	int target = enemies[rand() % enemies.size()];
+
+	
+
 	bool left, right, up, down;
 	left = right = up = down = false;
 

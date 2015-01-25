@@ -10,20 +10,29 @@ struct PlayerInfo
 	int score;
 	int diff;
 	int killCount;
+
+	friend bool operator>(PlayerInfo const& _l, PlayerInfo const& _r)
+	{
+		return strcmp(_l.buffer, _r.buffer) > 0;
+	}
+	friend ostream & operator<<(ostream & os, PlayerInfo const& _info)
+	{
+		return os << _info.buffer << " on level: " << _info.diff << " has killed: " << _info.killCount << " has got: " << _info.score << "\n";
+	}
 };
 
 
-	/** @brief Player class for the game.
-	*
-	*	Detailed description follows here.
-	*	@author Junshu Chen
-	*	@date Jan 2015
-	*/
+/** @brief Player class for the game.
+*
+*	Detailed description follows here.
+*	@author Junshu Chen
+*	@date Jan 2015
+*/
 class Player : public BaseObject
 {
 private:
 	string name;
-	int score, diff; 
+	int score, diff;
 	int hp = 100;
 	int numofHM = 10;   // Number of Homing Missiles.
 	int numofRK = 5;    //Number of Rockets. 
@@ -40,7 +49,7 @@ public:
 
 	/**
 	* A Constructor sets up every undefined members.
-	* 
+	*
 	* @param _name a C-string of name.
 	* @param _score score.
 	* @param _diff difficulty.
@@ -50,7 +59,7 @@ public:
 	* @param _x x-position default is 0.
 	* @param _y y-position default is 0.
 	*/
-	Player(const char* const _name, int _score, int _diff, 
+	Player(const char* const _name, int _score, int _diff,
 		const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg, const short _x = 0, const short _y = 0);
 
 	/**
@@ -106,7 +115,7 @@ public:
 	* @param _frame global frame count.
 	*/
 	void Update(int _frame);
-	
+
 	/**
 	* Render HUD and player's ship.
 	*/
@@ -119,7 +128,7 @@ public:
 	* @return a boolean indicate whether it will collide or not.
 	*/
 	bool Collides(const int _newX, const int _newY);
-	
+
 	void Reset();
 };
 

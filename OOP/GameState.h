@@ -15,7 +15,11 @@ class GameState : public BaseState
 private:
 	static DList<BaseObject*> gameObjects;
 	vector<BaseObject*> readInObjects; //An array of Objects read from file images.txt
+	const int MAXBOSS = 1;
+	int boss = 0;
 	int enemyCount = 0;
+	int waves = 1;
+	const int MAXWAVES = 10;
 	int numofStars;
 	Cell<>* stars;
 public:
