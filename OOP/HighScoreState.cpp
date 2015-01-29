@@ -182,15 +182,26 @@ void HighScoreState::SaveAs()
 	Console::Clear();
 
 	string fileName = "HighScore";
+	int entries = 0;
 	cout << "Give a name to the file: ";
 	cin >> fileName;
+	cin.clear();
+	cin.ignore(LLONG_MAX, '\n');
 	fileName += ".txt";
+	cout << "How many entries do you want to save?";
+	for (;;)
+	{
+		if (cin >> entries && entries < (int)inScores.size() && entries >= 0)
+			break;
+		cin.clear();
+		cin.ignore(LLONG_MAX, '\n');
+	}
 
 	ofstream fout;
 	fout.open(fileName);
 	while (fout.is_open())
 	{
-		for (int i = 0; i < (int)inScores.size(); i++)
+		for (int i = 0; i < entries; i++)
 		{
 			fout << inScores[i];
 		}

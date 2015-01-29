@@ -1,11 +1,12 @@
 #pragma once
-
+#include "Cell.h"
 /** @brief OBJECT_ID enum to id each object.
 */
 enum OBJECT_ID
 {
 	PLAYER = 0, ENEMY, PLAYER_MISSILE, ENEMY_MISSILE, PLAYER_HOMING_MISSILE, PLAYER_ROCKET
 };
+
 
 /** @brief BaseObject class for the game. Every object in the game is inherited from this class.
 *
@@ -17,13 +18,17 @@ class BaseObject
 {
 private:
 	string text;
+	
 	unsigned short width, height;
 	ConsoleColor foreground, background;
 	short x, y;
 	bool alive;
 	OBJECT_ID id;
+	vector<Cell<int, char>> cells;
+protected:
+	
 public:
-
+	
 	/**
 	* Default Constructor.
 	*/
@@ -67,12 +72,13 @@ public:
 	ConsoleColor GetBackGround() const { return background; }
 	bool GetAlive() const { return alive; }
 	OBJECT_ID GetID() const { return id; }
+	vector<Cell<int, char>> GetCells() const { return cells; }
 	///@}
 
 	/** @name Mutators.
 	*/
 	///@{ 
-	void SetText(const char * const _text){ text = _text; CalWH(); }
+	void SetText(const char * const _text){ text = _text; CalWH(); SetCells(); }
 	void SetX(const short _x)  { x = _x; }
 	void SetY(const short _y)  { y = _y; }
 	void SetWidth(const unsigned short _width)  { width = _width; }
@@ -119,6 +125,8 @@ public:
 	* @param _newY y coordinate will be moved to in next frame.
 	* @return a boolean indicate if it will be out of bounds.
 	*/
-	bool OutOfBounds(const int _newX, const int _newY);
+	bool OutOfBounds(const vector<int> _newX, const vector<int> _newY);
+
+	void SetCells();
 };
 

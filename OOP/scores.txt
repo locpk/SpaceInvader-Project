@@ -37,3 +37,8 @@ Bob	0	1
 Bob	550	1
 Bob	500	1
 Bob	1100	1
+Bob	0	1
+Bob	0	1
+Bob	750	1
+Bob	0	1
+Bob	0	1

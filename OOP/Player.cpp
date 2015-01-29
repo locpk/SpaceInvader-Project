@@ -4,6 +4,7 @@
 #include "Missile.h"
 #include "HomingMissile.h"
 #include "Rocket.h"
+#include "Game.h"
 Player::Player()
 {
 	SetID(PLAYER);
@@ -56,9 +57,16 @@ void Player::Input()
 
 	if (dx || dy)
 	{
-		int newX = GetX() + dx;
-		int newY = GetY() + dy;
-
+		/*int newX = GetX() + dx;
+		int newY = GetY() + dy;*/
+		vector<int> newX;
+		vector<int> newY;
+		for (size_t i = 0; i < GetCells().size(); i++)
+		{
+			newX.push_back(GetX() + dx + GetCells()[i][0]);
+			newY.push_back(GetY() + dy + GetCells()[i][1]);
+		}
+		
 		if (!OutOfBounds(newX, newY) && !Collides(newX, newY))
 		{
 
@@ -105,10 +113,35 @@ void Player::Input()
 		SetNumofRK(GetNumofRK() - 1);
 	}
 
+	if (GetAsyncKeyState(VK_F1) && !buttonPressed)
+	{
+		buttonPressed = true;
+		Game::GetCheats() ^= ALIVE_FLAG;
+	}
+
+	if (GetAsyncKeyState(VK_F2) && !buttonPressed)
+	{
+		buttonPressed = true;
+		Game::GetCheats() ^= GHOST_FLAG;
+	}
+
+	if (GetAsyncKeyState(VK_F3) && !buttonPressed)
+	{
+		buttonPressed = true;
+		Game::GetCheats() ^= ENEMY_MOVE_FLAG;
+	}
+
+	if (GetAsyncKeyState(VK_F4) && !buttonPressed)
+	{
+		buttonPressed = true;
+		Game::GetCheats() ^= ENEMY_SHOOT_FLAG;
+	}
+
 }
 void Player::Update(int _frame)
 {
-	if (!GetAsyncKeyState(VK_NUMPAD4) && !GetAsyncKeyState(VK_NUMPAD5) && !GetAsyncKeyState(VK_NUMPAD6))
+	if (!GetAsyncKeyState(VK_NUMPAD4) && !GetAsyncKeyState(VK_NUMPAD5) && !GetAsyncKeyState(VK_NUMPAD6) && !GetAsyncKeyState(VK_F1) && 
+		!GetAsyncKeyState(VK_F2) && !GetAsyncKeyState(VK_F3) && !GetAsyncKeyState(VK_F4))
 	{
 		buttonPressed = false;
 	}
@@ -125,7 +158,8 @@ void Player::Update(int _frame)
 void Player::Render()
 {
 	Console::SetCursorPosition(0, 0);
-	cout << "Name: " << name << " HP: " << hp << " Kills: " << killCount;
+	bitset<8> x(Game::GetCheats());
+	cout << "Name: " << name << " HP: " << hp << " Kills: " << killCount << " Cheats: " << x;
 	Console::SetCursorPosition(Console::WindowWidth() >> 1, 0);
 	cout << "Score: " << score;
 	Console::SetCursorPosition(Console::WindowWidth() - 15, 0);
@@ -146,8 +180,12 @@ void Player::Render()
 		BaseObject::Render();
 }
 
-bool Player::Collides(const int _newX, const int _newY)
+bool Player::Collides(const vector<int> _newX, const vector<int> _newY)
 {
+	if (Game::GetCheats() & GHOST_FLAG)
+	{
+		return false;
+	}
 	int i = 0;
 	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 	bool collided = false;
@@ -160,7 +198,7 @@ bool Player::Collides(const int _newX, const int _newY)
 		{
 
 		case ENEMY:
-			left = tempObjects[i]->GetX();
+			/*left = tempObjects[i]->GetX();
 			top = tempObjects[i]->GetY();
 			right = left + tempObjects[i]->GetWidth();
 			bottom = top + tempObjects[i]->GetHeight();
@@ -177,6 +215,16 @@ bool Player::Collides(const int _newX, const int _newY)
 
 				collided = true;
 				break;
+			}*/
+			for (size_t j = 0; j < tempObjects[i]->GetCells().size(); j++)
+			{
+				for (size_t c = 0; c < _newX.size(); c++)
+				{
+					if (_newX[c] == (tempObjects[i]->GetCells()[j][0] + tempObjects[i]->GetX()) && _newY[c] == (tempObjects[i]->GetCells()[j][1] + tempObjects[i]->GetY()))
+					{
+						return true;
+					}
+				}
 			}
 			break;
 		default:

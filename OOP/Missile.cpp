@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Rocket.h"
+#include "Game.h"
 Missile::Missile()
 {
 	SetText("*");
@@ -31,7 +32,15 @@ void Missile::Update(int _frame)
 		int newX = GetX() + velX;
 		int newY = GetY() + velY;
 
-		if (Collides(newX, newY) || OutOfBounds(newX, newY))
+		vector<int> newXA;
+		vector<int> newYA;
+		for (size_t i = 0; i < GetCells().size(); i++)
+		{
+			newXA.push_back(GetX() + velX + GetCells()[i][0]);
+			newYA.push_back(GetY() + velY + GetCells()[i][1]);
+		}
+
+		if (Collides(newX, newY) || OutOfBounds(newXA, newYA))
 		{
 			SetAlive(false);
 		}
@@ -94,6 +103,10 @@ bool Missile::Collides(const int _newX, const int _newY)
 		}
 		break;
 	case ENEMY_MISSILE:
+		if (Game::GetCheats() & GHOST_FLAG)
+		{
+			return false;
+		}
 		left = tempObjects[PLAYER_SUB]->GetX();
 		top = tempObjects[PLAYER_SUB]->GetY();
 		right = left + tempObjects[PLAYER_SUB]->GetWidth();

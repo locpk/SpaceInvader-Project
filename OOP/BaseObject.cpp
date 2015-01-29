@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Enemy.h"
 
+
 BaseObject::BaseObject()
 {
 	x = y = -1;
@@ -77,16 +78,20 @@ void BaseObject::Render()
 	Console::SetCursorPosition(x, y);
 	Console::ForegroundColor(foreground);
 	Console::BackgroundColor(background);
-	int size = text.length();
+	for (int i = 0; i < (int)cells.size(); i++)
+	{
+		cells[i].Show(x, y);
+	}
+	/*int size = text.length();
 	for (int i = 0; i < size; i++)
 	{
-		if ('\n' == text[i])
-		{
-			Console::SetCursorPosition(x, Console::CursorTop() + 1);
-		}
-		else
-			cout << text[i];
+	if ('\n' == text[i])
+	{
+	Console::SetCursorPosition(x, Console::CursorTop() + 1);
 	}
+	else
+	cout << text[i];
+	}*/
 	Console::ResetColor();
 }
 
@@ -118,14 +123,49 @@ bool BaseObject::Collides(const int _newX, const int _newY)
 			break;
 		}
 
+
+
 	}
 	return collided;
 }
 
-bool BaseObject::OutOfBounds(const int _newX, const int _newY)
+bool BaseObject::OutOfBounds(const vector<int> _newX, const vector<int> _newY)
 {
-	if (_newX >= 0 && _newX <= Console::WindowWidth() - GetWidth() && _newY > 0 && _newY <= Console::WindowHeight() - 1 - GetHeight())
-		return false;
-	else
-		return true;
+	bool flag = false;
+	for (size_t i = 0; i < GetCells().size(); i++)
+	{
+		if (_newX[i] >= 0 && _newX[i] <= Console::WindowWidth() && _newY[i] > 0 && _newY[i] < Console::WindowHeight() - 1)
+			continue;
+		else
+			flag = true;
+	}
+	return flag;
+}
+
+void BaseObject::SetCells()
+{
+
+	int offsetX, offsetY;
+	offsetX = offsetY = 0;
+	for (size_t i = 0; i < text.length(); i++)
+	{
+		if (text[i] == '\n')
+		{
+			offsetY++;
+			offsetX = 0;
+
+		}
+		else if (text[i] == ' ')
+		{
+			offsetX++;
+		}
+		if (text[i] != '\n' && text[i] != ' ')
+		{
+			cells.push_back(Cell<int, char>(offsetX++, offsetY, White, Black, text[i]));
+		}
+
+
+
+	}
+
 }

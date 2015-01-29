@@ -17,6 +17,7 @@ class Game
 {
 private:
 	int frame = 0;
+	static char cheats;
 	static bool play;
 	static BaseState* currentState;
 	static vector<BaseState*> states;
@@ -62,5 +63,7 @@ public:
 	* @param _play 
 	*/
 	static void SetPlay(const bool _play) { play = _play; }
+
+	static char& GetCheats() { return cheats; }
 };
 

@@ -116,7 +116,15 @@ void HomingMissile::Update(int _frame)
 		int newX = GetX() + GetXVel();
 		int newY = GetY() + GetYVel();
 
-		if (Collides(newX, newY) || OutOfBounds(newX, newY))
+		vector<int> newXA;
+		vector<int> newYA;
+		for (size_t i = 0; i < GetCells().size(); i++)
+		{
+			newXA.push_back(GetX() + GetXVel() + GetCells()[i][0]);
+			newYA.push_back(GetY() + GetYVel() + GetCells()[i][1]);
+		}
+
+		if (Collides(newX, newY) || OutOfBounds(newXA, newYA))
 		{
 			SetAlive(false);
 		}

@@ -14,6 +14,7 @@
 BaseState* Game::currentState = NULL;
 vector<BaseState*> Game::states;
 bool Game::play = true;
+char Game::cheats = 1;
 Game::Game()
 {
 	System::Console::SetBufferSize(200, 50);
@@ -41,7 +42,7 @@ void Game::Play()
 {
 	ChangeState(MENU_STATE);
 
-	for (; play; ++frame)
+	for (;play && (cheats & ALIVE_FLAG); ++frame)
 	{
 		Input();
 		Update(frame);
@@ -58,7 +59,6 @@ void Game::Input()
 	/*if (GetAsyncKeyState(VK_ESCAPE))
 		play = false;*/
 
-	
 
 }
 void Game::Update(int _frame)

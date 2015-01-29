@@ -1,0 +1,3 @@
+Bob on level: 1 has killed: 5 has got: 500
+Bob on level: 1 has killed: 5 has got: 565
+Bob on level: 1 has killed: 5 has got: 565

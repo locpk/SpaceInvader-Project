@@ -127,7 +127,7 @@ public:
 	* @param _newY y coordinate will be moved to in next frame.
 	* @return a boolean indicate whether it will collide or not.
 	*/
-	bool Collides(const int _newX, const int _newY);
+	bool Collides(const vector<int> _newX, const vector<int> _newY);
 
 	void Reset();
 };

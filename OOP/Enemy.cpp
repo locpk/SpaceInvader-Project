@@ -3,6 +3,7 @@
 #include "Player.h"
 #include"GameState.h"
 #include "Missile.h"
+#include "Game.h"
 
 Enemy::Enemy()
 {
@@ -31,10 +32,17 @@ void Enemy::Input()
 
 void Enemy::Update(int _frame)
 {
-	if (_frame % 1 == 0)
+	if (_frame % 1 == 0 && (Game::GetCheats() & ENEMY_MOVE_FLAG))
 	{
-		int newX = GetX() + velocity;
-		int newY = GetY();
+
+
+		vector<int> newX;
+		vector<int> newY;
+		for (size_t i = 0; i < GetCells().size(); i++)
+		{
+			newX.push_back(GetX() + velocity + GetCells()[i][0]);
+			newY.push_back(GetY()+ GetCells()[i][1]);
+		}
 
 		if (Collides(newX, newY) || OutOfBounds(newX, newY))
 		{
@@ -59,7 +67,7 @@ void Enemy::Update(int _frame)
 	}
 
 	//enemy shooting every 10 frames
-	if (_frame % 10 == 0)
+	if (_frame % 10 == 0 && (Game::GetCheats() & ENEMY_SHOOT_FLAG))
 	{
 		DList<BaseObject*>& tempObjects = GameState::GetObjects();
 		Missile* m = new Missile();
@@ -78,8 +86,12 @@ void Enemy::Render()
 		BaseObject::Render();
 }
 
-bool Enemy::Collides(const int _newX, const int _newY)
+bool Enemy::Collides(const vector<int> _newX, const vector<int> _newY)
 {
+	if (Game::GetCheats() & GHOST_FLAG)
+	{
+		return false;
+	}
 	int i = 0;
 	DList<BaseObject*>& tempObjects = GameState::GetObjects();
 	bool collided = false;
@@ -92,22 +104,15 @@ bool Enemy::Collides(const int _newX, const int _newY)
 		{
 
 		case PLAYER:
-			left = tempObjects[i]->GetX();
-			top = tempObjects[i]->GetY();
-			right = left + tempObjects[i]->GetWidth();
-			bottom = top + tempObjects[i]->GetHeight();
-
-			if (_newX >= right ||
-				_newX + GetWidth() <= left ||
-				_newY >= bottom ||
-				_newY + GetHeight() <= top)
+			for (size_t j = 0; j < tempObjects[i]->GetCells().size(); j++)
 			{
-				collided = false;
-			}
-			else
-			{
-				collided = true;
-				break;
+				for (size_t c = 0; c < _newX.size(); c++)
+				{
+					if (_newX[c] == (tempObjects[i]->GetCells()[j][0] + tempObjects[i]->GetX()) && _newY[c] == (tempObjects[i]->GetCells()[j][1] + tempObjects[i]->GetY()))
+					{
+						return true;
+					}
+				}
 			}
 			break;
 		default:
