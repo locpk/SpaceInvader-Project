@@ -34,6 +34,9 @@
     <Text Include="Images.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Skulls.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">

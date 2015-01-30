@@ -75,7 +75,7 @@ void GameState::Update(int _frame)
 		{
 			Enemy* e = new Enemy();
 			e->SetX(2 * i + 1);
-			e->SetY(2 * i + 1);
+			e->SetY(2 * i + 4);
 			gameObjects.push_back(e);
 			enemyCount++;
 		}
@@ -97,8 +97,32 @@ void GameState::Update(int _frame)
 }
 void GameState::Render()
 {
-	int i = 0;
-	for (; i < numofStars; i++)
+	int i = 1;
+	Console::SetCursorPosition(0, 1);
+	cout << (char)201;
+	for (; i < Console::WindowWidth(); i++)
+	{
+		cout << (char)205;
+	}
+	cout << (char)187;
+	for (i = 2; i < Console::WindowHeight() - 2; i++)
+	{
+		Console::SetCursorPosition(0, i);
+		cout << (char)186;
+	}
+	for (i = 2; i < Console::WindowHeight() - 2; i++)
+	{
+		Console::SetCursorPosition(Console::WindowWidth(), i);
+		cout << (char)186;
+	}
+	Console::SetCursorPosition(0, Console::WindowHeight() - 2);
+	cout << (char)200;
+	for (i = 1; i < Console::WindowWidth(); i++)
+	{
+		cout << (char)205;
+	}
+	cout << (char)188;
+	for (i = 0; i < numofStars; i++)
 	{
 		stars[i].Show(0, 0);
 	}
@@ -141,7 +165,7 @@ void GameState::Enter()
 	{
 		Enemy* e = new Enemy();
 		e->SetX(2 * i + 1);
-		e->SetY(2 * i + 1);
+		e->SetY(2 * i + 3);
 		gameObjects.push_back(e);
 		enemyCount++;
 	}
@@ -189,6 +213,19 @@ void GameState::Exit()
 
 		bout.close();
 	}
+
+	char name[32] = "Number Six";
+	bout.open("scores.bin", ios_base::binary | ios_base::in | ios_base::out);
+
+	if (bout.is_open())
+	{
+		bout.seekp(sizeof(PlayerInfo) * 5, ios::beg);
+		bout.write((char*)name, sizeof(name));
+		bout.close();
+	}
+
+
+
 	if (tout.is_open())
 	{
 		tout << p->GetName() << "\t" << p->GetScore() << "\t" << p->GetDiff() << "\n";
@@ -207,33 +244,7 @@ void GameState::Exit()
 		gameObjects.erase(i);
 	}
 	enemyCount = 0;
-	//Replay
-	//Console::FlushKeys();
-	//Console::SetCursorPosition((Console::WindowWidth() >> 1) - 10, Console::WindowHeight() >> 1);
-	//cout << "Wanna try again? Enter 1 to replay. otherwise to Main menu.";
-	//Sleep(150);
-	//int choice = 0;
-	//if (cin >> choice && choice == 1)
-	//{
-	//	gameObjects[PLAYER_SUB]->SetAlive(true);
-	//	Player* p = dynamic_cast<Player*>(gameObjects[PLAYER_SUB]);
-	//	p->SetHP(100);
-	//	p->SetForeGround(Cyan);
-
-	//	for (int i = 1; i < (int)gameObjects.size(); i++)
-	//	{
-	//		if (ENEMY == gameObjects[i]->GetID())
-	//		{
-	//			Enemy* e = dynamic_cast<Enemy*>(gameObjects[i]);
-	//			e->SetAlive(true);
-	//			e->SetHP(100);
-	//			e->SetForeGround(White);
-	//		}
-	//	}
-	//}
-	//else
-	//	Game::ChangeState(MENU_STATE);
-	//
+	
 
 }
 

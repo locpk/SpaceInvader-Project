@@ -134,7 +134,7 @@ bool BaseObject::OutOfBounds(const vector<int> _newX, const vector<int> _newY)
 	bool flag = false;
 	for (size_t i = 0; i < GetCells().size(); i++)
 	{
-		if (_newX[i] >= 0 && _newX[i] <= Console::WindowWidth() && _newY[i] > 0 && _newY[i] < Console::WindowHeight() - 1)
+		if (_newX[i] > 0 && _newX[i] < Console::WindowWidth() && _newY[i] > 1 && _newY[i] < Console::WindowHeight() - 2)
 			continue;
 		else
 			flag = true;

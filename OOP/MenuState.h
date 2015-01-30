@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseState.h"
-
+#include "fmod.hpp" 
+#pragma comment( lib, "fmodex_vc.lib" )
 /** @brief MenuState class control menu layout m.
 *	@author Junshu Chen
 *	@date Jan 2015
@@ -12,6 +13,10 @@ private:
 	string menuStrings[4];
 	bool buttonPressed = false; 
 	string menuArt;
+	string skull;
+	string* out;
+	FMOD::System     *system; //handle to FMOD engine
+	FMOD::Sound      *sound1;
 
 public:
 	/** Constructor

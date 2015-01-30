@@ -10,7 +10,7 @@ Enemy::Enemy()
 	SetID(ENEMY);
 	SetText("<-O->");
 	SetX(System::Console::WindowWidth() >> 1);
-	SetY(3);
+	SetY(4);
 }
 Enemy::Enemy(const int _velocity,
 	const char* const _text, const ConsoleColor _fg, const ConsoleColor _bg,  const int _hp, short _x, short _y) : BaseObject(_text, _fg, _bg, _x, _y)
